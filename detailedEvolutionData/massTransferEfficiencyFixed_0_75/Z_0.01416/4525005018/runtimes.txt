@@ -1,4 +1,4 @@
 #	seconds
 int	float
 SEED	runtime
-2105001534	0.61
+4525005018	0.33
