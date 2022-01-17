@@ -19,10 +19,6 @@ this directory is similar to the 'fiducial_vs_all_betas' directory, but instead 
 
 
 
-An example plot from the directory "fiducial vs all betas" is shown below 
-
-![alt text](https://github.com/FloorBroekgaarden/MRR_Project/blob/main/Figure1_individual_MRR_systems_detailed_evolution/detailedPlots/extraPlots/fiducial_vs_all_betas/compareModels__fiducialmassTransferEfficiencyFixed_0_25_mass1mass2_2105001147_4505024245paper.pdf?raw=true)
-
 
 
 
