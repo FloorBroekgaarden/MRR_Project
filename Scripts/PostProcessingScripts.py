@@ -216,7 +216,7 @@ def layoutAxesNoYlabel(ax, nameX='', nameY='', \
         ax.spines[axis].set_linewidth(1.2)
     ax.tick_params(length=tickLengthMajor, width=tickWidthMajor, which='major')
     ax.tick_params(length=tickLengthMinor, width=tickWidthMinor, which='minor')
-    ax.set_xlabel(nameX, fontsize=fontsize,labelpad=labelpad, rotation=rotation, va="center")#,fontweight='bold')
+    ax.set_xlabel(nameX, fontsize=fontsize,labelpad=labelpad, rotation=rotation)#,fontweight='bold')
     # ax.set_ylabel(nameY, fontsize=fontsize,labelpad=labelpad)#, fontweight='bold')    
     
     if setMinor==True:
