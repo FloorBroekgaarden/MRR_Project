@@ -69,202 +69,200 @@ for ind_GSMF, GSMF in enumerate(GSMFs):
 
 
 
-def writeToRatesFile_FormationChannels(BPSmodelName='Z', DCOtype='BHNS'):
+# def writeToRatesFile_FormationChannels(BPSmodelName='Z', DCOtype='BHNS'):
 
 
 
 
 
 
-    # DCOtype='BHNS'
+#     # DCOtype='BHNS'
 
-    if DCOtype=='BHNS':
-        DCOname='BHNS'
-    elif DCOtype=='BBH':
-        DCOname='BHBH'
-    elif DCOtype=='BNS':
-        DCOname='NSNS'
+#     if DCOtype=='BHNS':
+#         DCOname='BHNS'
+#     elif DCOtype=='BBH':
+#         DCOname='BHBH'
+#     elif DCOtype=='BNS':
+#         DCOname='NSNS'
 
 
 
-    # path for files 
-    path_dir = '/Volumes/Andromeda/DATA/AllDCO_bugfix/'
-    path_ = path_dir
-    path_ = path_ + alphabetDirDict[BPSmodelName] +'/'
-    path  = path_ + 'COMPASCompactOutput_'+ DCOtype +'_' + BPSmodelName + '.h5'
+#     # path for files 
+#     path_dir = '/Volumes/Andromeda/DATA/AllDCO_bugfix/'
+#     path_ = path_dir
+#     path_ = path_ + alphabetDirDict[BPSmodelName] +'/'
+#     path  = path_ + 'COMPASCompactOutput_'+ DCOtype +'_' + BPSmodelName + '.h5'
             
-    # read in data 
-    fdata = h5.File(path)
+#     # read in data 
+#     fdata = h5.File(path)
 
-    # set optimistic true if that is the variation (H) 
-    OPTIMISTIC=False
-    if BPSmodelName=='H':
-        OPTIMISTIC=True 
-
-
-
-    # get formation channel Seeds!
-    seedsPercentageClassic, seedsPercentageOnlyStableMT = returnSeedsPercentageClassicAndOnlyStableMT(pathCOMPASOutput=path_,\
-                                    types=DCOtype,  withinHubbleTime=True, optimistic=OPTIMISTIC, \
-                                    binaryFraction=1)
-    seedsClassic, percentageClassic = seedsPercentageClassic
-    seedsOnlyStableMT, percentageOnlyStableMT = seedsPercentageOnlyStableMT
+#     # set optimistic true if that is the variation (H) 
+#     OPTIMISTIC=False
+#     if BPSmodelName=='H':
+#         OPTIMISTIC=True 
 
 
 
-    seedsDoubleCE, percentageDoubleCE = returnSeedsPercentageDoubleCoreCEE(pathCOMPASOutput=path_,\
-                                    types=DCOtype,  withinHubbleTime=True, optimistic=OPTIMISTIC, \
-                                    binaryFraction=1)
-
-
-    seedsSingleCE, percentageSingleCE = returnSeedsPercentageSingleCoreCEE(pathCOMPASOutput=path_,\
-                                    types=DCOtype,  withinHubbleTime=True, optimistic=OPTIMISTIC, \
-                                    binaryFraction=1)
-
-
-
-    seedschannels = [seedsClassic, seedsOnlyStableMT, seedsSingleCE, seedsDoubleCE]
-
-    seedsOther, percentageOther = returnSeedsPercentageOther(pathCOMPASOutput=path_,\
-                                    types=DCOtype,  withinHubbleTime=True, optimistic=OPTIMISTIC, \
-                                    binaryFraction=1, channelsSeedsList=seedschannels)
+#     # get formation channel Seeds!
+#     seedsPercentageClassic, seedsPercentageOnlyStableMT = returnSeedsPercentageClassicAndOnlyStableMT(pathCOMPASOutput=path_,\
+#                                     types=DCOtype,  withinHubbleTime=True, optimistic=OPTIMISTIC, \
+#                                     binaryFraction=1)
+#     seedsClassic, percentageClassic = seedsPercentageClassic
+#     seedsOnlyStableMT, percentageOnlyStableMT = seedsPercentageOnlyStableMT
 
 
 
-
-    dictChannelsBHNS = { 'classic':seedsClassic, \
-                        'immediate CE':seedsSingleCE,\
-                             'stable B no CEE':seedsOnlyStableMT, \
-                         r'double-core CE':seedsDoubleCE,  \
-                            'other':seedsOther\
-                           }
+#     seedsDoubleCE, percentageDoubleCE = returnSeedsPercentageDoubleCoreCEE(pathCOMPASOutput=path_,\
+#                                     types=DCOtype,  withinHubbleTime=True, optimistic=OPTIMISTIC, \
+#                                     binaryFraction=1)
 
 
-    dictPercentages = { 'classic':percentageClassic, \
-                        'immediate CE':percentageSingleCE,\
-                             'stable B no CEE':percentageOnlyStableMT, \
-                         r'double-core CE':percentageDoubleCE,  \
-                            'other':percentageOther\
-                           } 
+#     seedsSingleCE, percentageSingleCE = returnSeedsPercentageSingleCoreCEE(pathCOMPASOutput=path_,\
+#                                     types=DCOtype,  withinHubbleTime=True, optimistic=OPTIMISTIC, \
+#                                     binaryFraction=1)
+
+
+
+#     seedschannels = [seedsClassic, seedsOnlyStableMT, seedsSingleCE, seedsDoubleCE]
+
+#     seedsOther, percentageOther = returnSeedsPercentageOther(pathCOMPASOutput=path_,\
+#                                     types=DCOtype,  withinHubbleTime=True, optimistic=OPTIMISTIC, \
+#                                     binaryFraction=1, channelsSeedsList=seedschannels)
 
 
 
 
-    # # obtain BH and NS masses
-    # M1 = fdata['doubleCompactObjects']['M1'][...].squeeze()
-    # M2 = fdata['doubleCompactObjects']['M2'][...].squeeze()
-    # MBH, MNS = obtainM1BHandM2BHassymetric(M1, M2)
-    # del M1
-    # del M2
+#     dictChannelsBHNS = { 'classic':seedsClassic, \
+#                         'immediate CE':seedsSingleCE,\
+#                              'stable B no CEE':seedsOnlyStableMT, \
+#                          r'double-core CE':seedsDoubleCE,  \
+#                             'other':seedsOther\
+#                            }
 
 
-    # get intrinsic weights
-
-    fparam_intrinsic = 'weights_intrinsic'
-    # get detected weights
-
-    fparam_detected = 'weights_detected'
-
-
-    ####################################################
-    ######### ITERATE  OVER  MSSFR  MODELS #############
-    ####################################################
-    intrinsicRates = np.zeros(len(MSSFRnameslist))
-    detectedRates = np.zeros(len(MSSFRnameslist))
-    namesEMlist = []
+#     dictPercentages = { 'classic':percentageClassic, \
+#                         'immediate CE':percentageSingleCE,\
+#                              'stable B no CEE':percentageOnlyStableMT, \
+#                          r'double-core CE':percentageDoubleCE,  \
+#                             'other':percentageOther\
+#                            } 
 
 
-    intrinsicRates_I = np.zeros(len(MSSFRnameslist))
-    detectedRates_I = np.zeros(len(MSSFRnameslist))
-    intrinsicRates_II = np.zeros(len(MSSFRnameslist))
-    detectedRates_II = np.zeros(len(MSSFRnameslist))
-    intrinsicRates_III = np.zeros(len(MSSFRnameslist))
-    detectedRates_III = np.zeros(len(MSSFRnameslist))
-    intrinsicRates_IV = np.zeros(len(MSSFRnameslist))
-    detectedRates_IV = np.zeros(len(MSSFRnameslist))
-    intrinsicRates_V = np.zeros(len(MSSFRnameslist))
-    detectedRates_V = np.zeros(len(MSSFRnameslist))
 
-    DCOSeeds = fdata['doubleCompactObjects']['seed'][...].squeeze()
 
-    for ind_mssfr, mssfr in enumerate(MSSFRnameslist):
+#     # # obtain BH and NS masses
+#     # M1 = fdata['doubleCompactObjects']['M1'][...].squeeze()
+#     # M2 = fdata['doubleCompactObjects']['M2'][...].squeeze()
+#     # MBH, MNS = obtainM1BHandM2BHassymetric(M1, M2)
+#     # del M1
+#     # del M2
 
-        # print('mssfr =',ind_mssfr, 'mssfr= ', mssfr)
-        weightheader = 'w_' + mssfr
-        # print(ind_mssfr, weightheader)
-        w_int = fdata[fparam_intrinsic][weightheader][...].squeeze()
-        w_det = fdata[fparam_detected][weightheader][...].squeeze()
 
-        intrinsicRates[ind_mssfr] = np.sum(w_int)
-        detectedRates[ind_mssfr] = np.sum(w_det)
+#     # get intrinsic weights
+
+#     fparam_intrinsic = 'weights_intrinsic'
+#     # get detected weights
+
+#     fparam_detected = 'weights_detected'
+
+
+#     ####################################################
+#     ######### ITERATE  OVER  MSSFR  MODELS #############
+#     ####################################################
+#     intrinsicRates = np.zeros(len(MSSFRnameslist))
+#     detectedRates = np.zeros(len(MSSFRnameslist))
+#     namesEMlist = []
+
+
+#     intrinsicRates_I = np.zeros(len(MSSFRnameslist))
+#     detectedRates_I = np.zeros(len(MSSFRnameslist))
+#     intrinsicRates_II = np.zeros(len(MSSFRnameslist))
+#     detectedRates_II = np.zeros(len(MSSFRnameslist))
+#     intrinsicRates_III = np.zeros(len(MSSFRnameslist))
+#     detectedRates_III = np.zeros(len(MSSFRnameslist))
+#     intrinsicRates_IV = np.zeros(len(MSSFRnameslist))
+#     detectedRates_IV = np.zeros(len(MSSFRnameslist))
+#     intrinsicRates_V = np.zeros(len(MSSFRnameslist))
+#     detectedRates_V = np.zeros(len(MSSFRnameslist))
+
+#     DCOSeeds = fdata['doubleCompactObjects']['seed'][...].squeeze()
+
+#     for ind_mssfr, mssfr in enumerate(MSSFRnameslist):
+
+#         # print('mssfr =',ind_mssfr, 'mssfr= ', mssfr)
+#         weightheader = 'w_' + mssfr
+#         # print(ind_mssfr, weightheader)
+#         w_int = fdata[fparam_intrinsic][weightheader][...].squeeze()
+#         w_det = fdata[fparam_detected][weightheader][...].squeeze()
+
+#         intrinsicRates[ind_mssfr] = np.sum(w_int)
+#         detectedRates[ind_mssfr] = np.sum(w_det)
         
-        for nrC, Channel in enumerate(dictChannelsBHNSList):
+#         for nrC, Channel in enumerate(dictChannelsBHNSList):
                         
-#             #Get the seeds that relate to sorted indices
-            seedsInterest = dictChannelsBHNS[Channel]
-            mask_C = np.in1d(DCOSeeds, np.array(seedsInterest))
-            if Channel=='classic':
-                intrinsicRates_I[ind_mssfr] = np.sum(w_int[mask_C])
-                detectedRates_I[ind_mssfr] = np.sum(w_det[mask_C])
-            elif Channel=='stable B no CEE':
-                intrinsicRates_II[ind_mssfr] = np.sum(w_int[mask_C])
-                detectedRates_II[ind_mssfr] = np.sum(w_det[mask_C])
-            elif Channel=='immediate CE':
-                intrinsicRates_III[ind_mssfr] = np.sum(w_int[mask_C])
-                detectedRates_III[ind_mssfr] = np.sum(w_det[mask_C])
-            elif Channel=='double-core CE':
-                intrinsicRates_IV[ind_mssfr] = np.sum(w_int[mask_C])
-                detectedRates_IV[ind_mssfr] = np.sum(w_det[mask_C])
-            elif Channel=='other':
-                intrinsicRates_V[ind_mssfr] = np.sum(w_int[mask_C])
-                detectedRates_V[ind_mssfr] = np.sum(w_det[mask_C])
+# #             #Get the seeds that relate to sorted indices
+#             seedsInterest = dictChannelsBHNS[Channel]
+#             mask_C = np.in1d(DCOSeeds, np.array(seedsInterest))
+#             if Channel=='classic':
+#                 intrinsicRates_I[ind_mssfr] = np.sum(w_int[mask_C])
+#                 detectedRates_I[ind_mssfr] = np.sum(w_det[mask_C])
+#             elif Channel=='stable B no CEE':
+#                 intrinsicRates_II[ind_mssfr] = np.sum(w_int[mask_C])
+#                 detectedRates_II[ind_mssfr] = np.sum(w_det[mask_C])
+#             elif Channel=='immediate CE':
+#                 intrinsicRates_III[ind_mssfr] = np.sum(w_int[mask_C])
+#                 detectedRates_III[ind_mssfr] = np.sum(w_det[mask_C])
+#             elif Channel=='double-core CE':
+#                 intrinsicRates_IV[ind_mssfr] = np.sum(w_int[mask_C])
+#                 detectedRates_IV[ind_mssfr] = np.sum(w_det[mask_C])
+#             elif Channel=='other':
+#                 intrinsicRates_V[ind_mssfr] = np.sum(w_int[mask_C])
+#                 detectedRates_V[ind_mssfr] = np.sum(w_det[mask_C])
 
 
 
        
 
-    stringgg =  'AllDCOsimulation_formation_channels'
+#     stringgg =  'AllDCOsimulation_formation_channels'
 
-    df = pd.read_csv('/Users/floorbroekgaarden/Projects/GitHub/MRR_Project/dataFiles/rates_MSSFR_Models_'+DCOname+ '_' + stringgg + '.csv', index_col=0)
-    namez0 = BPSmodelName + 'All intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
-    nameObs = BPSmodelName + 'All observed (design LVK) [yr^{-1}]'
+#     df = pd.read_csv('/Users/floorbroekgaarden/Projects/GitHub/MRR_Project/dataFiles/rates_MSSFR_Models_'+DCOname+ '_' + stringgg + '.csv', index_col=0)
+#     namez0 = BPSmodelName + 'All intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
+#     nameObs = BPSmodelName + 'All observed (design LVK) [yr^{-1}]'
 
-    namez0_I = BPSmodelName + 'channel I intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
-    nameObs_I = BPSmodelName + 'channel I observed (design LVK) [yr^{-1}]'
-    namez0_II = BPSmodelName + 'channel II intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
-    nameObs_II = BPSmodelName + 'channel II observed (design LVK) [yr^{-1}]'
-    namez0_III = BPSmodelName + 'channel III intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
-    nameObs_III = BPSmodelName + 'channel III observed (design LVK) [yr^{-1}]'
-    namez0_IV = BPSmodelName + 'channel IV intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
-    nameObs_IV = BPSmodelName + 'channel IV observed (design LVK) [yr^{-1}]'
-    namez0_V = BPSmodelName + 'channel V intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
-    nameObs_V = BPSmodelName + 'channel V observed (design LVK) [yr^{-1}]'
-
-
-
-    df[namez0] = intrinsicRates
-    df[nameObs] = detectedRates
-
-    df[namez0_I] = intrinsicRates_I
-    df[nameObs_I] = detectedRates_I
-    df[namez0_II] = intrinsicRates_II
-    df[nameObs_II] = detectedRates_II
-    df[namez0_III] = intrinsicRates_III
-    df[nameObs_III] = detectedRates_III 
-    df[namez0_IV] = intrinsicRates_IV
-    df[nameObs_IV] = detectedRates_IV 
-    df[namez0_V] = intrinsicRates_V
-    df[nameObs_V] = detectedRates_V  
+#     namez0_I = BPSmodelName + 'channel I intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
+#     nameObs_I = BPSmodelName + 'channel I observed (design LVK) [yr^{-1}]'
+#     namez0_II = BPSmodelName + 'channel II intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
+#     nameObs_II = BPSmodelName + 'channel II observed (design LVK) [yr^{-1}]'
+#     namez0_III = BPSmodelName + 'channel III intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
+#     nameObs_III = BPSmodelName + 'channel III observed (design LVK) [yr^{-1}]'
+#     namez0_IV = BPSmodelName + 'channel IV intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
+#     nameObs_IV = BPSmodelName + 'channel IV observed (design LVK) [yr^{-1}]'
+#     namez0_V = BPSmodelName + 'channel V intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
+#     nameObs_V = BPSmodelName + 'channel V observed (design LVK) [yr^{-1}]'
 
 
-    df.to_csv('/Users/floorbroekgaarden/Projects/GitHub/MRR_Project/dataFiles/rates_MSSFR_Models_'+DCOname+ '_' + stringgg  + '.csv')
+
+#     df[namez0] = intrinsicRates
+#     df[nameObs] = detectedRates
+
+#     df[namez0_I] = intrinsicRates_I
+#     df[nameObs_I] = detectedRates_I
+#     df[namez0_II] = intrinsicRates_II
+#     df[nameObs_II] = detectedRates_II
+#     df[namez0_III] = intrinsicRates_III
+#     df[nameObs_III] = detectedRates_III 
+#     df[namez0_IV] = intrinsicRates_IV
+#     df[nameObs_IV] = detectedRates_IV 
+#     df[namez0_V] = intrinsicRates_V
+#     df[nameObs_V] = detectedRates_V  
 
 
-    fdata.close() 
-
-    return
+#     df.to_csv('/Users/floorbroekgaarden/Projects/GitHub/MRR_Project/dataFiles/rates_MSSFR_Models_'+DCOname+ '_' + stringgg  + '.csv')
 
 
+#     fdata.close() 
+
+#     return
 
 
 
@@ -272,561 +270,558 @@ def writeToRatesFile_FormationChannels(BPSmodelName='Z', DCOtype='BHNS'):
 
 
 
-#### FUNCTIONS TO INITIALIZE CSV FILES
-
-def initialize_CSV_files_general(DCOname='BHNS'):
 
 
+# #### FUNCTIONS TO INITIALIZE CSV FILES
 
-    namesEMlist=[]
+# def initialize_CSV_files_general(DCOname='BHNS'):
 
 
-    iii=0
+
+#     namesEMlist=[]
+
+
+#     iii=0
     
 
-    # CREATE PANDAS FILE 
-    nModels=26
-    BPSnameslist = list(string.ascii_uppercase)[0:nModels]
+#     # CREATE PANDAS FILE 
+#     nModels=26
+#     BPSnameslist = list(string.ascii_uppercase)[0:nModels]
 
-    NAMES = []
-    stringgg = 'AllDCOsimulation'
+#     NAMES = []
+#     stringgg = 'AllDCOsimulation'
 
-    for ind_l, L in enumerate(BPSnameslist):
-        str_z0 = str(L + ' intrinsic (z=0) [Gpc^{-3} yr^{-1}]')
-        str_obs = str(L + ' observed (design LVK) [yr^{-1}]')
-        NAMES.append(str_z0)
-        NAMES.append(str_obs)
+#     for ind_l, L in enumerate(BPSnameslist):
+#         str_z0 = str(L + ' intrinsic (z=0) [Gpc^{-3} yr^{-1}]')
+#         str_obs = str(L + ' observed (design LVK) [yr^{-1}]')
+#         NAMES.append(str_z0)
+#         NAMES.append(str_obs)
         
         
 
 
-    datas=[]
+#     datas=[]
 
-    for i in range(len(BPSnameslist)):
-        datas.append(np.zeros_like(MSSFRnameslist))
-        datas.append(np.zeros_like(MSSFRnameslist))
+#     for i in range(len(BPSnameslist)):
+#         datas.append(np.zeros_like(MSSFRnameslist))
+#         datas.append(np.zeros_like(MSSFRnameslist))
         
         
-    df = pd.DataFrame(data=datas, index=NAMES, columns=MSSFRnameslistCSV).T
-    df.columns =   df.columns.map(str)
-    df.index.names = ['xyz']
-    df.columns.names = ['m']
+#     df = pd.DataFrame(data=datas, index=NAMES, columns=MSSFRnameslistCSV).T
+#     df.columns =   df.columns.map(str)
+#     df.index.names = ['xyz']
+#     df.columns.names = ['m']
 
-    # print(df) 
+#     # print(df) 
 
-    df.to_csv('/Users/floorbroekgaarden/Projects/GitHub/MRR_Project/dataFiles/rates_MSSFR_Models_'+DCOname+ '_' + stringgg + '.csv')
-
-
-
-def writeToRatesFile_lightestFormsFirst(BPSmodelName='Z', DCOtype='BHNS'):
-    """writes NS-BH rate to CSV file for all models"""
-
-    if DCOtype=='BHNS':
-        DCOname='BHNS'
-    elif DCOtype=='BBH':
-        DCOname='BHBH'
-    elif DCOtype=='BNS':
-        DCOname='NSNS'
+#     df.to_csv('/Users/floorbroekgaarden/Projects/GitHub/MRR_Project/dataFiles/rates_MSSFR_Models_'+DCOname+ '_' + stringgg + '.csv')
 
 
 
-    # path for files 
-    path_dir = '/Volumes/Andromeda/DATA/AllDCO_bugfix/'
-    path_ = path_dir
-    path_ = path_ + alphabetDirDict[BPSmodelName] +'/'
-    path  = path_ + 'COMPASCompactOutput_'+ DCOtype +'_' + BPSmodelName + '.h5'
+# def writeToRatesFile_lightestFormsFirst(BPSmodelName='Z', DCOtype='BHNS'):
+#     """writes NS-BH rate to CSV file for all models"""
+
+#     if DCOtype=='BHNS':
+#         DCOname='BHNS'
+#     elif DCOtype=='BBH':
+#         DCOname='BHBH'
+#     elif DCOtype=='BNS':
+#         DCOname='NSNS'
+
+
+
+#     # path for files 
+#     path_dir = '/Volumes/Andromeda/DATA/AllDCO_bugfix/'
+#     path_ = path_dir
+#     path_ = path_ + alphabetDirDict[BPSmodelName] +'/'
+#     path  = path_ + 'COMPASCompactOutput_'+ DCOtype +'_' + BPSmodelName + '.h5'
             
-    # read in data 
-    fdata = h5.File(path)
+#     # read in data 
+#     fdata = h5.File(path)
 
-    # set optimistic true if that is the variation (H) 
-    OPTIMISTIC=False
-    if BPSmodelName=='H':
-        OPTIMISTIC=True 
+#     # set optimistic true if that is the variation (H) 
+#     OPTIMISTIC=False
+#     if BPSmodelName=='H':
+#         OPTIMISTIC=True 
 
-    # obtain BH and NS masses
-    M1 = fdata['doubleCompactObjects']['M1'][...].squeeze()
-    M2 = fdata['doubleCompactObjects']['M2'][...].squeeze()
-    MBH, MNS = obtainM1BHandM2BHassymetric(M1, M2)
-
-
+#     # obtain BH and NS masses
+#     M1 = fdata['doubleCompactObjects']['M1'][...].squeeze()
+#     M2 = fdata['doubleCompactObjects']['M2'][...].squeeze()
+#     MBH, MNS = obtainM1BHandM2BHassymetric(M1, M2)
 
 
-    whichSN = fdata['supernovae']['whichStar'][...].squeeze() 
-    maskSNnot3 = (whichSN ==1) | (whichSN==2)
 
 
-    DCOseeds = fdata['doubleCompactObjects']['seed'][...].squeeze()
-    seedsSN = fdata['supernovae']['randomSeed'][...].squeeze()
+#     whichSN = fdata['supernovae']['whichStar'][...].squeeze() 
+#     maskSNnot3 = (whichSN ==1) | (whichSN==2)
+
+
+#     DCOseeds = fdata['doubleCompactObjects']['seed'][...].squeeze()
+#     seedsSN = fdata['supernovae']['randomSeed'][...].squeeze()
     
-    u, indices = np.unique(seedsSN, return_index=True)
-    # uniqueSN = seedsSN[indices]
+#     u, indices = np.unique(seedsSN, return_index=True)
+#     # uniqueSN = seedsSN[indices]
 
-    # bools = np.in1d(uniqueSN, DCOseeds)
-
-
-
-    # maskSNspecial = (bools==1) & (maskSNnot3==1)
-
-    # print(len(uniqueSN), )
-    print(len(fdata['supernovae']['whichStar'][...].squeeze()))
-    print(seedsSN)
+#     # bools = np.in1d(uniqueSN, DCOseeds)
 
 
 
-    whichSN = fdata['supernovae']['whichStar'][...].squeeze()[indices] # get whichStar for first SN 
+#     # maskSNspecial = (bools==1) & (maskSNnot3==1)
 
-    print(len(seedsSN), len(set(seedsSN)))
-    print(whichSN)
-    print(set(whichSN))
-    print(len(whichSN), len(M1), len(M2))
+#     # print(len(uniqueSN), )
+#     print(len(fdata['supernovae']['whichStar'][...].squeeze()))
+#     print(seedsSN)
+
+
+
+#     whichSN = fdata['supernovae']['whichStar'][...].squeeze()[indices] # get whichStar for first SN 
+
+#     print(len(seedsSN), len(set(seedsSN)))
+#     print(whichSN)
+#     print(set(whichSN))
+#     print(len(whichSN), len(M1), len(M2))
 
     
-    mask_temp = ((whichSN==2) & (M1>M2) )
-    mask_2 = ((whichSN==1) & (M1<M2))
-    print('nr of weird reversals = %s'%np.sum(mask_temp))
-    print('nr of normal reversals = %s'%np.sum(mask_2))
+#     mask_temp = ((whichSN==2) & (M1>M2) )
+#     mask_2 = ((whichSN==1) & (M1<M2))
+#     print('nr of weird reversals = %s'%np.sum(mask_temp))
+#     print('nr of normal reversals = %s'%np.sum(mask_2))
 
 
 
 
 
-    maskNSBH = ((whichSN==2) & (M1>M2) ) | ((whichSN==1) & (M1<M2) ) 
+#     maskNSBH = ((whichSN==2) & (M1>M2) ) | ((whichSN==1) & (M1<M2) ) 
 
 
 
-    del M1
-    del M2
+#     del M1
+#     del M2
 
 
 
 
-    # get intrinsic weights
+#     # get intrinsic weights
 
-    fparam_intrinsic = 'weights_intrinsic'
-    # get detected weights
+#     fparam_intrinsic = 'weights_intrinsic'
+#     # get detected weights
 
-    fparam_detected = 'weights_detected'
+#     fparam_detected = 'weights_detected'
 
 
-    ####################################################
-    ######### ITERATE  OVER  MSSFR  MODELS #############
-    ####################################################
-    intrinsicRates = np.zeros(len(MSSFRnameslist))
-    detectedRates = np.zeros(len(MSSFRnameslist))
-    namesEMlist = []
+#     ####################################################
+#     ######### ITERATE  OVER  MSSFR  MODELS #############
+#     ####################################################
+#     intrinsicRates = np.zeros(len(MSSFRnameslist))
+#     detectedRates = np.zeros(len(MSSFRnameslist))
+#     namesEMlist = []
 
-    for ind_mssfr, mssfr in enumerate(MSSFRnameslist):
-#             print('mssfr =',ind_mssfr)
-        weightheader = 'w_' + mssfr
-        w_int = fdata[fparam_intrinsic][weightheader][...].squeeze()[maskNSBH]
-        w_det = fdata[fparam_detected][weightheader][...].squeeze()[maskNSBH]
+#     for ind_mssfr, mssfr in enumerate(MSSFRnameslist):
+# #             print('mssfr =',ind_mssfr)
+#         weightheader = 'w_' + mssfr
+#         w_int = fdata[fparam_intrinsic][weightheader][...].squeeze()[maskNSBH]
+#         w_det = fdata[fparam_detected][weightheader][...].squeeze()[maskNSBH]
 
-        intrinsicRates[ind_mssfr] = np.sum(w_int)
-        detectedRates[ind_mssfr] = np.sum(w_det)
+#         intrinsicRates[ind_mssfr] = np.sum(w_int)
+#         detectedRates[ind_mssfr] = np.sum(w_det)
 
 
 
        
 
 
-    stringgg =  'lightestFormsFirst'
+#     stringgg =  'lightestFormsFirst'
 
-    df = pd.read_csv('/Users/floorbroekgaarden/Projects/GitHub/MRR_Project/dataFiles/rates_MSSFR_Models_'+DCOname+ '_' + stringgg + '.csv', index_col=0)
-    namez0 = BPSmodelName + ' intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
-    nameObs = BPSmodelName + ' observed (design LVK) [yr^{-1}]'
+#     df = pd.read_csv('/Users/floorbroekgaarden/Projects/GitHub/MRR_Project/dataFiles/rates_MSSFR_Models_'+DCOname+ '_' + stringgg + '.csv', index_col=0)
+#     namez0 = BPSmodelName + ' intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
+#     nameObs = BPSmodelName + ' observed (design LVK) [yr^{-1}]'
 
-    df[namez0] = intrinsicRates
-    df[nameObs] = detectedRates 
-
-
-    df.to_csv('/Users/floorbroekgaarden/Projects/GitHub/MRR_Project/dataFiles/rates_MSSFR_Models_'+DCOname+ '_' + stringgg  + '.csv')
-    fdata.close() 
-    return
+#     df[namez0] = intrinsicRates
+#     df[nameObs] = detectedRates 
 
 
-
-#### FUNCTIONS TO INITIALIZE CSV FILES
-
-def initialize_CSV_files_lightestBHfirst(DCOname='BHNS'):
+#     df.to_csv('/Users/floorbroekgaarden/Projects/GitHub/MRR_Project/dataFiles/rates_MSSFR_Models_'+DCOname+ '_' + stringgg  + '.csv')
+#     fdata.close() 
+#     return
 
 
 
-    namesEMlist=[]
+# #### FUNCTIONS TO INITIALIZE CSV FILES
+
+# def initialize_CSV_files_lightestBHfirst(DCOname='BHNS'):
 
 
-    iii=0
+
+#     namesEMlist=[]
+
+
+#     iii=0
     
 
-    # CREATE PANDAS FILE 
-    nModels=26
-    BPSnameslist = list(string.ascii_uppercase)[0:nModels]
+#     # CREATE PANDAS FILE 
+#     nModels=26
+#     BPSnameslist = list(string.ascii_uppercase)[0:nModels]
 
-    NAMES = []
-    stringgg =  'lightestFormsFirst'
+#     NAMES = []
+#     stringgg =  'lightestFormsFirst'
 
-    for ind_l, L in enumerate(BPSnameslist):
-        str_z0 = str(L + ' intrinsic (z=0) [Gpc^{-3} yr^{-1}]')
-        str_obs = str(L + ' observed (design LVK) [yr^{-1}]')
-        NAMES.append(str_z0)
-        NAMES.append(str_obs)
+#     for ind_l, L in enumerate(BPSnameslist):
+#         str_z0 = str(L + ' intrinsic (z=0) [Gpc^{-3} yr^{-1}]')
+#         str_obs = str(L + ' observed (design LVK) [yr^{-1}]')
+#         NAMES.append(str_z0)
+#         NAMES.append(str_obs)
         
         
 
 
-    datas=[]
+#     datas=[]
 
-    for i in range(len(BPSnameslist)):
-        datas.append(np.zeros_like(MSSFRnameslist))
-        datas.append(np.zeros_like(MSSFRnameslist))
+#     for i in range(len(BPSnameslist)):
+#         datas.append(np.zeros_like(MSSFRnameslist))
+#         datas.append(np.zeros_like(MSSFRnameslist))
         
         
-    df = pd.DataFrame(data=datas, index=NAMES, columns=MSSFRnameslistCSV).T
-    df.columns =   df.columns.map(str)
-    df.index.names = ['xyz']
-    df.columns.names = ['m']
+#     df = pd.DataFrame(data=datas, index=NAMES, columns=MSSFRnameslistCSV).T
+#     df.columns =   df.columns.map(str)
+#     df.index.names = ['xyz']
+#     df.columns.names = ['m']
 
-    # print(df) 
+#     # print(df) 
 
-    df.to_csv('/Users/floorbroekgaarden/Projects/GitHub/MRR_Project/dataFiles/rates_MSSFR_Models_'+DCOname+ '_' + stringgg + '.csv')
-
-
-
-
-#####################
+#     df.to_csv('/Users/floorbroekgaarden/Projects/GitHub/MRR_Project/dataFiles/rates_MSSFR_Models_'+DCOname+ '_' + stringgg + '.csv')
 
 
 
 
-def initialize_CSV_files_MRRformationChannels(DCOname='BHBH'):
+# #####################
 
-    # namesEMlist=[]
 
-    iii=0
+
+
+# def initialize_CSV_files_MRRformationChannels(DCOname='BHBH'):
+
+#     # namesEMlist=[]
+
+#     iii=0
     
 
-    # CREATE PANDAS FILE 
-    nModels=26
-    BPSnameslist = list(string.ascii_uppercase)[0:nModels]
+#     # CREATE PANDAS FILE 
+#     nModels=26
+#     BPSnameslist = list(string.ascii_uppercase)[0:nModels]
 
-    NAMES = []
-    stringgg =  'MRR_FormationChannels'
+#     NAMES = []
+#     stringgg =  'MRR_FormationChannels'
 
-    for ind_l, BPSmodelName in enumerate(BPSnameslist):
-        # str_z0 = str(L + ' intrinsic (z=0) [Gpc^{-3} yr^{-1}]')
-        # str_obs = str(L + ' observed (design LVK) [yr^{-1}]')
+#     for ind_l, BPSmodelName in enumerate(BPSnameslist):
+#         # str_z0 = str(L + ' intrinsic (z=0) [Gpc^{-3} yr^{-1}]')
+#         # str_obs = str(L + ' observed (design LVK) [yr^{-1}]')
 
-        namez0 = BPSmodelName + 'All intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
-        nameObs = BPSmodelName + 'All observed (design LVK) [yr^{-1}]'
-        namez0_MRR = BPSmodelName + 'All MRR intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
-        nameObs_MRR = BPSmodelName + 'All MRR observed (design LVK) [yr^{-1}]'
+#         namez0 = BPSmodelName + 'All intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
+#         nameObs = BPSmodelName + 'All observed (design LVK) [yr^{-1}]'
+#         namez0_MRR = BPSmodelName + 'All MRR intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
+#         nameObs_MRR = BPSmodelName + 'All MRR observed (design LVK) [yr^{-1}]'
 
-        namez0_I = BPSmodelName + 'MRR channel I intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
-        nameObs_I = BPSmodelName + 'MRR channel I observed (design LVK) [yr^{-1}]'
-        namez0_II = BPSmodelName + 'MRR channel II intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
-        nameObs_II = BPSmodelName + 'MRR channel II observed (design LVK) [yr^{-1}]'
-        namez0_III = BPSmodelName + 'MRR channel III intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
-        nameObs_III = BPSmodelName + 'MRR channel III observed (design LVK) [yr^{-1}]'
-        namez0_IV = BPSmodelName + 'MRR channel IV intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
-        nameObs_IV = BPSmodelName + 'MRR channel IV observed (design LVK) [yr^{-1}]'
-        namez0_V = BPSmodelName + 'MRR channel V intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
-        nameObs_V = BPSmodelName + 'MRR channel V observed (design LVK) [yr^{-1}]'
+#         namez0_I = BPSmodelName + 'MRR channel I intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
+#         nameObs_I = BPSmodelName + 'MRR channel I observed (design LVK) [yr^{-1}]'
+#         namez0_II = BPSmodelName + 'MRR channel II intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
+#         nameObs_II = BPSmodelName + 'MRR channel II observed (design LVK) [yr^{-1}]'
+#         namez0_III = BPSmodelName + 'MRR channel III intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
+#         nameObs_III = BPSmodelName + 'MRR channel III observed (design LVK) [yr^{-1}]'
+#         namez0_IV = BPSmodelName + 'MRR channel IV intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
+#         nameObs_IV = BPSmodelName + 'MRR channel IV observed (design LVK) [yr^{-1}]'
+#         namez0_V = BPSmodelName + 'MRR channel V intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
+#         nameObs_V = BPSmodelName + 'MRR channel V observed (design LVK) [yr^{-1}]'
 
-        NAMES.append(namez0)
-        NAMES.append(nameObs)
+#         NAMES.append(namez0)
+#         NAMES.append(nameObs)
 
-        NAMES.append(namez0_MRR)
-        NAMES.append(nameObs_MRR)
+#         NAMES.append(namez0_MRR)
+#         NAMES.append(nameObs_MRR)
 
-        NAMES.append(namez0_I)
-        NAMES.append(nameObs_I)
-        NAMES.append(namez0_II)
-        NAMES.append(nameObs_II)
-        NAMES.append(namez0_III)
-        NAMES.append(nameObs_III)
-        NAMES.append(namez0_IV)
-        NAMES.append(nameObs_IV)
-        NAMES.append(namez0_V)
-        NAMES.append(nameObs_V)
+#         NAMES.append(namez0_I)
+#         NAMES.append(nameObs_I)
+#         NAMES.append(namez0_II)
+#         NAMES.append(nameObs_II)
+#         NAMES.append(namez0_III)
+#         NAMES.append(nameObs_III)
+#         NAMES.append(namez0_IV)
+#         NAMES.append(nameObs_IV)
+#         NAMES.append(namez0_V)
+#         NAMES.append(nameObs_V)
 
 
         
         
 
 
-    datas=[]
+#     datas=[]
 
-    for i in range(len(BPSnameslist)):
-        for ii in range(7):
-            datas.append(np.zeros_like(MSSFRnameslist))
-            datas.append(np.zeros_like(MSSFRnameslist))
+#     for i in range(len(BPSnameslist)):
+#         for ii in range(7):
+#             datas.append(np.zeros_like(MSSFRnameslist))
+#             datas.append(np.zeros_like(MSSFRnameslist))
         
         
-    df = pd.DataFrame(data=datas, index=NAMES, columns=MSSFRnameslistCSV).T
-    df.columns =   df.columns.map(str)
-    df.index.names = ['xyz']
-    df.columns.names = ['m']
+#     df = pd.DataFrame(data=datas, index=NAMES, columns=MSSFRnameslistCSV).T
+#     df.columns =   df.columns.map(str)
+#     df.index.names = ['xyz']
+#     df.columns.names = ['m']
 
-    # print(df) 
+#     # print(df) 
 
-    df.to_csv('/Users/floorbroekgaarden/Projects/GitHub/MRR_Project/dataFiles/rates_MSSFR_Models_'+DCOname+ '_' + stringgg + '.csv')
-
-
+#     df.to_csv('/Users/floorbroekgaarden/Projects/GitHub/MRR_Project/dataFiles/rates_MSSFR_Models_'+DCOname+ '_' + stringgg + '.csv')
 
 
 
 
 
-def writeToRatesFile_MRR_FormationChannels(BPSmodelName='Z', DCOtype='BHNS'):
-    """writes NS-BH rate to CSV file for all models"""
-
-    if DCOtype=='BHNS':
-        DCOname='BHNS'
-    elif DCOtype=='BBH':
-        DCOname='BHBH'
-    elif DCOtype=='BNS':
-        DCOname='NSNS'
 
 
-    # path for files 
-    path_dir = '/Volumes/Andromeda/DATA/AllDCO_bugfix/'
-    path_ = path_dir
-    path_ = path_ + alphabetDirDict[BPSmodelName] +'/'
-    path  = path_ + 'COMPASCompactOutput_'+ DCOtype +'_' + BPSmodelName + '.h5'
+# def writeToRatesFile_MRR_FormationChannels(BPSmodelName='Z', DCOtype='BHNS'):
+#     """writes NS-BH rate to CSV file for all models"""
+
+#     if DCOtype=='BHNS':
+#         DCOname='BHNS'
+#     elif DCOtype=='BBH':
+#         DCOname='BHBH'
+#     elif DCOtype=='BNS':
+#         DCOname='NSNS'
+
+
+#     # path for files 
+#     path_dir = '/Volumes/Andromeda/DATA/AllDCO_bugfix/'
+#     path_ = path_dir
+#     path_ = path_ + alphabetDirDict[BPSmodelName] +'/'
+#     path  = path_ + 'COMPASCompactOutput_'+ DCOtype +'_' + BPSmodelName + '.h5'
             
-    # read in data 
-    fdata = h5.File(path)
+#     # read in data 
+#     fdata = h5.File(path)
 
 
-    # set optimistic true if that is the variation (H) 
-    OPTIMISTIC=False
-    if (BPSmodelName=='F') | (BPSmodelName=='K') :
-        OPTIMISTIC=True 
+#     # set optimistic true if that is the variation (H) 
+#     OPTIMISTIC=False
+#     if (BPSmodelName=='F') | (BPSmodelName=='K') :
+#         OPTIMISTIC=True 
 
-    # obtain DCO masses
-    M1 = fdata['doubleCompactObjects']['M1'][...].squeeze()
-    M2 = fdata['doubleCompactObjects']['M2'][...].squeeze()
-    MBH, MNS = obtainM1BHandM2BHassymetric(M1, M2)
-
-
-    whichSN = fdata['supernovae']['whichStar'][...].squeeze() 
-    maskSNnot3 = (whichSN ==1) | (whichSN==2)
+#     # obtain DCO masses
+#     M1 = fdata['doubleCompactObjects']['M1'][...].squeeze()
+#     M2 = fdata['doubleCompactObjects']['M2'][...].squeeze()
+#     MBH, MNS = obtainM1BHandM2BHassymetric(M1, M2)
 
 
-    DCOseeds = fdata['doubleCompactObjects']['seed'][...].squeeze()
-    seedsSN = fdata['supernovae']['randomSeed'][...].squeeze()
+#     whichSN = fdata['supernovae']['whichStar'][...].squeeze() 
+#     maskSNnot3 = (whichSN ==1) | (whichSN==2)
+
+
+#     DCOseeds = fdata['doubleCompactObjects']['seed'][...].squeeze()
+#     seedsSN = fdata['supernovae']['randomSeed'][...].squeeze()
     
-    u, indices = np.unique(seedsSN, return_index=True)
+#     u, indices = np.unique(seedsSN, return_index=True)
 
-    print(len(fdata['supernovae']['whichStar'][...].squeeze()))
-    print(seedsSN)
+#     print(len(fdata['supernovae']['whichStar'][...].squeeze()))
+#     print(seedsSN)
 
 
-    whichSN = fdata['supernovae']['whichStar'][...].squeeze()[indices] # get whichStar for first SN 
+#     whichSN = fdata['supernovae']['whichStar'][...].squeeze()[indices] # get whichStar for first SN 
 
-    print(len(seedsSN), len(set(seedsSN)))
-    print(whichSN)
-    print(set(whichSN))
-    print(len(whichSN), len(M1), len(M2))
+#     print(len(seedsSN), len(set(seedsSN)))
+#     print(whichSN)
+#     print(set(whichSN))
+#     print(len(whichSN), len(M1), len(M2))
 
     
-    mask_temp = ((whichSN==2) & (M1>M2) )
-    mask_2 = ((whichSN==1) & (M1<M2))
-    print('nr of weird reversals = %s'%np.sum(mask_temp))
-    print('nr of normal reversals = %s'%np.sum(mask_2))
+#     mask_temp = ((whichSN==2) & (M1>M2) )
+#     mask_2 = ((whichSN==1) & (M1<M2))
+#     print('nr of weird reversals = %s'%np.sum(mask_temp))
+#     print('nr of normal reversals = %s'%np.sum(mask_2))
 
 
 
 
-    maskMRR = ((whichSN==2) & (M1>M2) ) | ((whichSN==1) & (M1<M2) ) 
+#     maskMRR = ((whichSN==2) & (M1>M2) ) | ((whichSN==1) & (M1<M2) ) 
 
 
 
-    del M1
-    del M2
+#     del M1
+#     del M2
 
 
-    print('at formation channel calc.')
-    fdata.close()
+#     print('at formation channel calc.')
+#     fdata.close()
 
-    # get formation channel Seeds!
-    seedsPercentageClassic, seedsPercentageOnlyStableMT = returnSeedsPercentageClassicAndOnlyStableMT(pathCOMPASOutput=path,\
-                                    types=DCOtype,  withinHubbleTime=True, optimistic=OPTIMISTIC, \
-                                    binaryFraction=1)
-    seedsClassic, percentageClassic = seedsPercentageClassic
-    seedsOnlyStableMT, percentageOnlyStableMT = seedsPercentageOnlyStableMT
-
-
-
-    seedsDoubleCE, percentageDoubleCE = returnSeedsPercentageDoubleCoreCEE(pathCOMPASOutput=path,\
-                                    types=DCOtype,  withinHubbleTime=True, optimistic=OPTIMISTIC, \
-                                    binaryFraction=1)
-
-
-    seedsSingleCE, percentageSingleCE = returnSeedsPercentageSingleCoreCEE(pathCOMPASOutput=path,\
-                                    types=DCOtype,  withinHubbleTime=True, optimistic=OPTIMISTIC, \
-                                    binaryFraction=1)
+#     # get formation channel Seeds!
+#     seedsPercentageClassic, seedsPercentageOnlyStableMT = returnSeedsPercentageClassicAndOnlyStableMT(pathCOMPASOutput=path,\
+#                                     types=DCOtype,  withinHubbleTime=True, optimistic=OPTIMISTIC, \
+#                                     binaryFraction=1)
+#     seedsClassic, percentageClassic = seedsPercentageClassic
+#     seedsOnlyStableMT, percentageOnlyStableMT = seedsPercentageOnlyStableMT
 
 
 
-    seedschannels = [seedsClassic, seedsOnlyStableMT, seedsSingleCE, seedsDoubleCE]
-
-    seedsOther, percentageOther = returnSeedsPercentageOther(pathCOMPASOutput=path,\
-                                    types=DCOtype,  withinHubbleTime=True, optimistic=OPTIMISTIC, \
-                                    binaryFraction=1, channelsSeedsList=seedschannels)
-
-    print('00')
+#     seedsDoubleCE, percentageDoubleCE = returnSeedsPercentageDoubleCoreCEE(pathCOMPASOutput=path,\
+#                                     types=DCOtype,  withinHubbleTime=True, optimistic=OPTIMISTIC, \
+#                                     binaryFraction=1)
 
 
-    dictChannelsBHNS = { 'classic':seedsClassic, \
-                        'immediate CE':seedsSingleCE,\
-                             'stable B no CEE':seedsOnlyStableMT, \
-                         r'double-core CE':seedsDoubleCE,  \
-                            'other':seedsOther\
-                           }
-
-
-    dictPercentages = { 'classic':percentageClassic, \
-                        'immediate CE':percentageSingleCE,\
-                             'stable B no CEE':percentageOnlyStableMT, \
-                         r'double-core CE':percentageDoubleCE,  \
-                            'other':percentageOther\
-                           }
+#     seedsSingleCE, percentageSingleCE = returnSeedsPercentageSingleCoreCEE(pathCOMPASOutput=path,\
+#                                     types=DCOtype,  withinHubbleTime=True, optimistic=OPTIMISTIC, \
+#                                     binaryFraction=1)
 
 
 
+#     seedschannels = [seedsClassic, seedsOnlyStableMT, seedsSingleCE, seedsDoubleCE]
 
-    # get intrinsic weights
+#     seedsOther, percentageOther = returnSeedsPercentageOther(pathCOMPASOutput=path,\
+#                                     types=DCOtype,  withinHubbleTime=True, optimistic=OPTIMISTIC, \
+#                                     binaryFraction=1, channelsSeedsList=seedschannels)
 
-    fparam_intrinsic = 'weights_intrinsic'
-    # get detected weights
-
-    fparam_detected = 'weights_detected'
-
-
-    ####################################################
-    ######### ITERATE  OVER  MSSFR  MODELS #############
-    ####################################################
+#     print('00')
 
 
-
-    ####################################################
-    ######### ITERATE  OVER  MSSFR  MODELS #############
-    ####################################################
-    intrinsicRates = np.zeros(len(MSSFRnameslist))
-    detectedRates = np.zeros(len(MSSFRnameslist))
-    # namesEMlist = []
-    intrinsicRates_MRR = np.zeros(len(MSSFRnameslist))
-    detectedRates_MRR = np.zeros(len(MSSFRnameslist))
-
-    intrinsicRates_I = np.zeros(len(MSSFRnameslist))
-    detectedRates_I = np.zeros(len(MSSFRnameslist))
-    intrinsicRates_II = np.zeros(len(MSSFRnameslist))
-    detectedRates_II = np.zeros(len(MSSFRnameslist))
-    intrinsicRates_III = np.zeros(len(MSSFRnameslist))
-    detectedRates_III = np.zeros(len(MSSFRnameslist))
-    intrinsicRates_IV = np.zeros(len(MSSFRnameslist))
-    detectedRates_IV = np.zeros(len(MSSFRnameslist))
-    intrinsicRates_V = np.zeros(len(MSSFRnameslist))
-    detectedRates_V = np.zeros(len(MSSFRnameslist))
-
-    fdata = h5.File(path)
-
-    DCOSeeds = fdata['doubleCompactObjects']['seed'][...].squeeze()
-
-    for ind_mssfr, mssfr in enumerate(MSSFRnameslist):
+#     dictChannelsBHNS = { 'classic':seedsClassic, \
+#                         'immediate CE':seedsSingleCE,\
+#                              'stable B no CEE':seedsOnlyStableMT, \
+#                          r'double-core CE':seedsDoubleCE,  \
+#                             'other':seedsOther\
+#                            }
 
 
-        weightheader = 'w_' + mssfr
-        # print(ind_mssfr, weightheader)
-        w_int = fdata[fparam_intrinsic][weightheader][...].squeeze()
-        w_det = fdata[fparam_detected][weightheader][...].squeeze()
+#     dictPercentages = { 'classic':percentageClassic, \
+#                         'immediate CE':percentageSingleCE,\
+#                              'stable B no CEE':percentageOnlyStableMT, \
+#                          r'double-core CE':percentageDoubleCE,  \
+#                             'other':percentageOther\
+#                            }
 
 
 
-        # ALL BBH RATES 
-        intrinsicRates[ind_mssfr] = np.sum(w_int)
-        detectedRates[ind_mssfr] = np.sum(w_det)
-        # MASS RATIO REVERSAL RATE ALL CHANNELS 
 
-        intrinsicRates_MRR[ind_mssfr] = np.sum(w_int[maskMRR])
-        detectedRates_MRR[ind_mssfr] = np.sum(w_det[maskMRR])
+#     # get intrinsic weights
+
+#     fparam_intrinsic = 'weights_intrinsic'
+#     # get detected weights
+
+#     fparam_detected = 'weights_detected'
+
+
+#     ####################################################
+#     ######### ITERATE  OVER  MSSFR  MODELS #############
+#     ####################################################
+
+
+
+#     ####################################################
+#     ######### ITERATE  OVER  MSSFR  MODELS #############
+#     ####################################################
+#     intrinsicRates = np.zeros(len(MSSFRnameslist))
+#     detectedRates = np.zeros(len(MSSFRnameslist))
+#     # namesEMlist = []
+#     intrinsicRates_MRR = np.zeros(len(MSSFRnameslist))
+#     detectedRates_MRR = np.zeros(len(MSSFRnameslist))
+
+#     intrinsicRates_I = np.zeros(len(MSSFRnameslist))
+#     detectedRates_I = np.zeros(len(MSSFRnameslist))
+#     intrinsicRates_II = np.zeros(len(MSSFRnameslist))
+#     detectedRates_II = np.zeros(len(MSSFRnameslist))
+#     intrinsicRates_III = np.zeros(len(MSSFRnameslist))
+#     detectedRates_III = np.zeros(len(MSSFRnameslist))
+#     intrinsicRates_IV = np.zeros(len(MSSFRnameslist))
+#     detectedRates_IV = np.zeros(len(MSSFRnameslist))
+#     intrinsicRates_V = np.zeros(len(MSSFRnameslist))
+#     detectedRates_V = np.zeros(len(MSSFRnameslist))
+
+#     fdata = h5.File(path)
+
+#     DCOSeeds = fdata['doubleCompactObjects']['seed'][...].squeeze()
+
+#     for ind_mssfr, mssfr in enumerate(MSSFRnameslist):
+
+
+#         weightheader = 'w_' + mssfr
+#         # print(ind_mssfr, weightheader)
+#         w_int = fdata[fparam_intrinsic][weightheader][...].squeeze()
+#         w_det = fdata[fparam_detected][weightheader][...].squeeze()
+
+
+
+#         # ALL BBH RATES 
+#         intrinsicRates[ind_mssfr] = np.sum(w_int)
+#         detectedRates[ind_mssfr] = np.sum(w_det)
+#         # MASS RATIO REVERSAL RATE ALL CHANNELS 
+
+#         intrinsicRates_MRR[ind_mssfr] = np.sum(w_int[maskMRR])
+#         detectedRates_MRR[ind_mssfr] = np.sum(w_det[maskMRR])
 
         
-        for nrC, Channel in enumerate(dictChannelsBHNSList):
+#         for nrC, Channel in enumerate(dictChannelsBHNSList):
                         
-    #             #Get the seeds that relate to sorted indices
-            seedsInterest = dictChannelsBHNS[Channel]
-            mask_temp = np.in1d(DCOSeeds, np.array(seedsInterest))
-            mask_C = (mask_temp==1) & (maskMRR==1)
-            if Channel=='classic':
-                intrinsicRates_I[ind_mssfr] = np.sum(w_int[mask_C])
-                detectedRates_I[ind_mssfr] = np.sum(w_det[mask_C])
-            elif Channel=='stable B no CEE':
-                intrinsicRates_II[ind_mssfr] = np.sum(w_int[mask_C])
-                detectedRates_II[ind_mssfr] = np.sum(w_det[mask_C])
-            elif Channel=='immediate CE':
-                intrinsicRates_III[ind_mssfr] = np.sum(w_int[mask_C])
-                detectedRates_III[ind_mssfr] = np.sum(w_det[mask_C])
-            elif Channel=='double-core CE':
-                intrinsicRates_IV[ind_mssfr] = np.sum(w_int[mask_C])
-                detectedRates_IV[ind_mssfr] = np.sum(w_det[mask_C])
-            elif Channel=='other':
-                intrinsicRates_V[ind_mssfr] = np.sum(w_int[mask_C])
-                detectedRates_V[ind_mssfr] = np.sum(w_det[mask_C])
+#     #             #Get the seeds that relate to sorted indices
+#             seedsInterest = dictChannelsBHNS[Channel]
+#             mask_temp = np.in1d(DCOSeeds, np.array(seedsInterest))
+#             mask_C = (mask_temp==1) & (maskMRR==1)
+#             if Channel=='classic':
+#                 intrinsicRates_I[ind_mssfr] = np.sum(w_int[mask_C])
+#                 detectedRates_I[ind_mssfr] = np.sum(w_det[mask_C])
+#             elif Channel=='stable B no CEE':
+#                 intrinsicRates_II[ind_mssfr] = np.sum(w_int[mask_C])
+#                 detectedRates_II[ind_mssfr] = np.sum(w_det[mask_C])
+#             elif Channel=='immediate CE':
+#                 intrinsicRates_III[ind_mssfr] = np.sum(w_int[mask_C])
+#                 detectedRates_III[ind_mssfr] = np.sum(w_det[mask_C])
+#             elif Channel=='double-core CE':
+#                 intrinsicRates_IV[ind_mssfr] = np.sum(w_int[mask_C])
+#                 detectedRates_IV[ind_mssfr] = np.sum(w_det[mask_C])
+#             elif Channel=='other':
+#                 intrinsicRates_V[ind_mssfr] = np.sum(w_int[mask_C])
+#                 detectedRates_V[ind_mssfr] = np.sum(w_det[mask_C])
 
 
 
 
-    fdata.close()  
+#     fdata.close()  
 
-    stringgg =  'MRR_FormationChannels'
+#     stringgg =  'MRR_FormationChannels'
 
-    df = pd.read_csv('/Users/floorbroekgaarden/Projects/GitHub/MRR_Project/dataFiles/rates_MSSFR_Models_'+DCOname+ '_' + stringgg + '.csv', index_col=0)
-    namez0 = BPSmodelName + 'All intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
-    nameObs = BPSmodelName + 'All observed (design LVK) [yr^{-1}]'
-    namez0_MRR = BPSmodelName + 'All MRR intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
-    nameObs_MRR = BPSmodelName + 'All MRR observed (design LVK) [yr^{-1}]'
+#     df = pd.read_csv('/Users/floorbroekgaarden/Projects/GitHub/MRR_Project/dataFiles/rates_MSSFR_Models_'+DCOname+ '_' + stringgg + '.csv', index_col=0)
+#     namez0 = BPSmodelName + 'All intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
+#     nameObs = BPSmodelName + 'All observed (design LVK) [yr^{-1}]'
+#     namez0_MRR = BPSmodelName + 'All MRR intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
+#     nameObs_MRR = BPSmodelName + 'All MRR observed (design LVK) [yr^{-1}]'
 
-    namez0_I = BPSmodelName + 'MRR channel I intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
-    nameObs_I = BPSmodelName + 'MRR channel I observed (design LVK) [yr^{-1}]'
-    namez0_II = BPSmodelName + 'MRR channel II intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
-    nameObs_II = BPSmodelName + 'MRR channel II observed (design LVK) [yr^{-1}]'
-    namez0_III = BPSmodelName + 'MRR channel III intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
-    nameObs_III = BPSmodelName + 'MRR channel III observed (design LVK) [yr^{-1}]'
-    namez0_IV = BPSmodelName + 'MRR channel IV intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
-    nameObs_IV = BPSmodelName + 'MRR channel IV observed (design LVK) [yr^{-1}]'
-    namez0_V = BPSmodelName + 'MRR channel V intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
-    nameObs_V = BPSmodelName + 'MRR channel V observed (design LVK) [yr^{-1}]'
-
-
-
-    df[namez0] = intrinsicRates
-    df[nameObs] = detectedRates
-    df[namez0_MRR] = intrinsicRates_MRR
-    df[nameObs_MRR] = detectedRates_MRR
-
-    df[namez0_I] = intrinsicRates_I
-    df[nameObs_I] = detectedRates_I
-    df[namez0_II] = intrinsicRates_II
-    df[nameObs_II] = detectedRates_II
-    df[namez0_III] = intrinsicRates_III
-    df[nameObs_III] = detectedRates_III 
-    df[namez0_IV] = intrinsicRates_IV
-    df[nameObs_IV] = detectedRates_IV 
-    df[namez0_V] = intrinsicRates_V
-    df[nameObs_V] = detectedRates_V  
-
-
-    df.to_csv('/Users/floorbroekgaarden/Projects/GitHub/MRR_Project/dataFiles/rates_MSSFR_Models_'+DCOname+ '_' + stringgg  + '.csv')
-
-
-    fdata.close()
+#     namez0_I = BPSmodelName + 'MRR channel I intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
+#     nameObs_I = BPSmodelName + 'MRR channel I observed (design LVK) [yr^{-1}]'
+#     namez0_II = BPSmodelName + 'MRR channel II intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
+#     nameObs_II = BPSmodelName + 'MRR channel II observed (design LVK) [yr^{-1}]'
+#     namez0_III = BPSmodelName + 'MRR channel III intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
+#     nameObs_III = BPSmodelName + 'MRR channel III observed (design LVK) [yr^{-1}]'
+#     namez0_IV = BPSmodelName + 'MRR channel IV intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
+#     nameObs_IV = BPSmodelName + 'MRR channel IV observed (design LVK) [yr^{-1}]'
+#     namez0_V = BPSmodelName + 'MRR channel V intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
+#     nameObs_V = BPSmodelName + 'MRR channel V observed (design LVK) [yr^{-1}]'
 
 
 
+#     df[namez0] = intrinsicRates
+#     df[nameObs] = detectedRates
+#     df[namez0_MRR] = intrinsicRates_MRR
+#     df[nameObs_MRR] = detectedRates_MRR
+
+#     df[namez0_I] = intrinsicRates_I
+#     df[nameObs_I] = detectedRates_I
+#     df[namez0_II] = intrinsicRates_II
+#     df[nameObs_II] = detectedRates_II
+#     df[namez0_III] = intrinsicRates_III
+#     df[nameObs_III] = detectedRates_III 
+#     df[namez0_IV] = intrinsicRates_IV
+#     df[nameObs_IV] = detectedRates_IV 
+#     df[namez0_V] = intrinsicRates_V
+#     df[nameObs_V] = detectedRates_V  
 
 
+#     df.to_csv('/Users/floorbroekgaarden/Projects/GitHub/MRR_Project/dataFiles/rates_MSSFR_Models_'+DCOname+ '_' + stringgg  + '.csv')
+
+
+#     fdata.close()
 
 
 
@@ -835,7 +830,12 @@ def writeToRatesFile_MRR_FormationChannels(BPSmodelName='Z', DCOtype='BHNS'):
 
 
 
-def writeToRatesFile_MRR_Spins(BPSmodelName='Z', DCOtype='BHNS'):
+
+
+
+
+
+def writeToRatesFile_MRR_Spins(BPSmodelName='Z', DCOtype='BHNS', spin_threshold=0.05):
     """writes NS-BH rate to CSV file for all models"""
 
     if DCOtype=='BHNS':
@@ -853,52 +853,36 @@ def writeToRatesFile_MRR_Spins(BPSmodelName='Z', DCOtype='BHNS'):
     path  = path_ + 'COMPASCompactOutput_'+ DCOtype +'_' + BPSmodelName + '.h5'
             
     # read in data 
-    fdata = h5.File(path)
+    fdata = h5.File(path, 'r')
+    fDCO      = fdata['doubleCompactObjects'] # hdf5 file with the DCO information
+    fSN       = fdata['supernovae']  # hdf5 file with the SN information
+    #
+    M1 = fDCO['M1'][...].squeeze()   # Compact object mass [Msun] of the initially more massive star
+    M2 = fDCO['M2'][...].squeeze()  # Compact object mass [Msun] of the initially less massive star
 
+    print('using indices')
+    seedsDCO = fDCO['seed'][...].squeeze()  # get the seeds in the DCO file 
+    seedsSN = fSN['randomSeed'][...].squeeze()    # get the seeds in the SN file 
+    indices = np.sort(np.unique(seedsSN[1::2], return_index=True)[1])
+    maskSNdco = np.in1d(seedsSN,  seedsDCO) # mask in the SNe files the SNe that correspond to our DCO
+    whichSN = fSN['whichStar'][...].squeeze()[maskSNdco]  # this is 1 if the initially primary star goes SN and 2 if the secondary goes supernova     
+    whichSN2 = whichSN[1::2][indices]
 
-    # set optimistic true if that is the variation (H) 
-    OPTIMISTIC=False
-    if (BPSmodelName=='F') | (BPSmodelName=='K') :
-        OPTIMISTIC=True 
-
-    # obtain DCO masses
-    M1 = fdata['doubleCompactObjects']['M1'][...].squeeze()
-    M2 = fdata['doubleCompactObjects']['M2'][...].squeeze()
-    MBH, MNS = obtainM1BHandM2BHassymetric(M1, M2)
-
-
-    whichSN = fdata['supernovae']['whichStar'][...].squeeze() 
-    maskSNnot3 = (whichSN ==1) | (whichSN==2)
-
-
-    DCOseeds = fdata['doubleCompactObjects']['seed'][...].squeeze()
-    seedsSN = fdata['supernovae']['randomSeed'][...].squeeze()
-    
-    u, indices = np.unique(seedsSN, return_index=True)
-
-
-
-
-    whichSN = fdata['supernovae']['whichStar'][...].squeeze()[indices] # get whichStar for first SN 
-
-
-    
-    mask_temp = ((whichSN==2) & (M1>M2) )
-    mask_2 = ((whichSN==1) & (M1<M2))
-
-
-
-
-
-    MRR_mask = ((whichSN==2) & (M1>M2) ) | ((whichSN==1) & (M1<M2) ) 
-
-
+    # either SN2 = primary (1) and M1 is > M2, or SN2 = secondary & M1 < M2 
+    # this takes into account (first term) rejuvenation 
+    MRR_mask = ((whichSN2==1) & (M1>M2) ) | ((whichSN2==2) & (M1<M2)) 
 
     del M1
     del M2
+    del whichSN2
+    del whichSN
+    del maskSNdco
+    del indices
+    del seedsSN
+    del seedsDCO
+    del fDCO
+    del fSN
 
-
-    print('at spin calc.')
     fdata.close()
 
 
@@ -908,23 +892,21 @@ def writeToRatesFile_MRR_Spins(BPSmodelName='Z', DCOtype='BHNS'):
     spinMZAMS1, spinMZAMS2  = spin.BaveraSpin()
 
 
-    spinLVKM1, spinLVKM2 = np.zeros(len(spinMZAMS1)), np.zeros(len(spinMZAMS1))
+    spinLVKM1, spinLVKM2 = np.zeros_like(spinMZAMS1), np.zeros_like(spinMZAMS1)
     spinLVKM1[MRR_mask] = spinMZAMS2[MRR_mask]  # MRR so M1 comes from M2ZAMS, we assign it spin from M2ZAMS
     spinLVKM1[~MRR_mask] = spinMZAMS1[~MRR_mask]  # no MRR so M1 comes from M1ZAMS, we assign it spin from M1ZAMS
     spinLVKM2[MRR_mask] = spinMZAMS1[MRR_mask]   # MRR so M2 comes from M1ZAMS, we assign it spin from M1ZAMS
     spinLVKM2[~MRR_mask] = spinMZAMS2[~MRR_mask]   # no MRR so M2 comes from M2ZAMS, we assign it spin from M2ZAMS     
 
-
-    mask_LVKM1_spinning = (spinLVKM1 > 0.05) # definition of "spinning BH"
-    mask_LVKM2_spinning = (spinLVKM2 > 0.05) # definition of "spinning BH"
-    mask_anySpin = (spinLVKM1 > 0.05) | (spinLVKM2 > 0.05)
+    # spin_threshold = 0.05 # definition of "spinning BH"
+    mask_LVKM1_spinning = (spinLVKM1 > spin_threshold ) 
+    mask_LVKM2_spinning = (spinLVKM2 > spin_threshold ) # definition of "spinning BH"
+    mask_anySpin = (spinLVKM1 > spin_threshold ) | (spinLVKM2 > spin_threshold )
 
 
     # get intrinsic weights
-
     fparam_intrinsic = 'weights_intrinsic'
     # get detected weights
-
     fparam_detected = 'weights_detected'
 
 
@@ -951,19 +933,16 @@ def writeToRatesFile_MRR_Spins(BPSmodelName='Z', DCOtype='BHNS'):
 
     for ind_mssfr, mssfr in enumerate(MSSFRnameslist):
 
-
         weightheader = 'w_' + mssfr
         # print(ind_mssfr, weightheader)
         w_int = fdata[fparam_intrinsic][weightheader][...].squeeze()
         w_det = fdata[fparam_detected][weightheader][...].squeeze()
 
-
-
         # ALL BBH RATES 
         intrinsicRates[ind_mssfr] = np.sum(w_int)
         detectedRates[ind_mssfr] = np.sum(w_det)
+        
         # MASS RATIO REVERSAL RATE ALL CHANNELS 
-
         intrinsicRates_spinning[ind_mssfr] = np.sum(w_int[mask_anySpin])
         detectedRates_spinning[ind_mssfr] = np.sum(w_det[mask_anySpin])
 
@@ -977,17 +956,19 @@ def writeToRatesFile_MRR_Spins(BPSmodelName='Z', DCOtype='BHNS'):
     fdata.close()  
 
     stringgg =  'MRR_Spins'
+    if spin_threshold!=0.05:
+        stringgg =  'MRR_Spins' +  '_threshold_%s_'%spin_threshold
 
     df = pd.read_csv('/Users/floorbroekgaarden/Projects/GitHub/MRR_Project/dataFiles/rates_MSSFR_Models_'+DCOname+ '_' + stringgg + '.csv', index_col=0)
     namez0 = BPSmodelName + 'All intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
     nameObs = BPSmodelName + 'All observed (design LVK) [yr^{-1}]'
-    namez0_spinAny = BPSmodelName + 'All: at least one spin >0.05 intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
-    nameObs_spinAny = BPSmodelName + 'All: at least one spin >0.05 observed (design LVK) [yr^{-1}]'
+    namez0_spinAny = BPSmodelName + 'All: at least one spin >%s intrinsic (z=0) [Gpc^{-3} yr^{-1}]'%spin_threshold
+    nameObs_spinAny = BPSmodelName + 'All: at least one spin >%s observed (design LVK) [yr^{-1}]'%spin_threshold
 
-    namez0_spinning_LVKM1 = BPSmodelName + 'LVKM1 spinning > 0.05 intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
-    nameObs_spinning_LVKM1 = BPSmodelName + 'LVKM1 spinning > 0.05 observed (design LVK) [yr^{-1}]'
-    namez0_spinning_LVKM2= BPSmodelName + 'LVKM2 spinning > 0.05 intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
-    nameObs_spinning_LVKM2 = BPSmodelName + 'LVKM2 spinning > 0.05 observed (design LVK) [yr^{-1}]'
+    namez0_spinning_LVKM1 = BPSmodelName + 'LVKM1 spinning > %s intrinsic (z=0) [Gpc^{-3} yr^{-1}]'%spin_threshold
+    nameObs_spinning_LVKM1 = BPSmodelName + 'LVKM1 spinning > %s observed (design LVK) [yr^{-1}]'%spin_threshold
+    namez0_spinning_LVKM2= BPSmodelName + 'LVKM2 spinning > %s intrinsic (z=0) [Gpc^{-3} yr^{-1}]'%spin_threshold
+    nameObs_spinning_LVKM2 = BPSmodelName + 'LVKM2 spinning > %s observed (design LVK) [yr^{-1}]'%spin_threshold
 
 
 
@@ -1014,7 +995,7 @@ def writeToRatesFile_MRR_Spins(BPSmodelName='Z', DCOtype='BHNS'):
 
 
 
-def initialize_CSV_files_MRRspins(DCOname='BHBH'):
+def initialize_CSV_files_MRRspins(DCOname='BHBH', spin_threshold=0.05):
 
     # namesEMlist=[]
 
@@ -1027,6 +1008,8 @@ def initialize_CSV_files_MRRspins(DCOname='BHBH'):
 
     NAMES = []
     stringgg =  'MRR_Spins'
+    if spin_threshold!=0.05:
+        stringgg =  'MRR_Spins' +  '_threshold_%s_'%spin_threshold
 
     for ind_l, BPSmodelName in enumerate(BPSnameslist):
         # str_z0 = str(L + ' intrinsic (z=0) [Gpc^{-3} yr^{-1}]')
@@ -1034,13 +1017,13 @@ def initialize_CSV_files_MRRspins(DCOname='BHBH'):
 
         namez0 = BPSmodelName + 'All intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
         nameObs = BPSmodelName + 'All observed (design LVK) [yr^{-1}]'
-        namez0_spinAny = BPSmodelName + 'All: at least one spin >0.05 intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
-        nameObs_spinAny = BPSmodelName + 'All: at least one spin >0.05 observed (design LVK) [yr^{-1}]'
+        namez0_spinAny = BPSmodelName + 'All: at least one spin >%s intrinsic (z=0) [Gpc^{-3} yr^{-1}]'%spin_threshold
+        nameObs_spinAny = BPSmodelName + 'All: at least one spin >%s observed (design LVK) [yr^{-1}]'%spin_threshold
 
-        namez0_spinning_LVKM1 = BPSmodelName + 'LVKM1 spinning > 0.05 intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
-        nameObs_spinning_LVKM1 = BPSmodelName + 'LVKM1 spinning > 0.05 observed (design LVK) [yr^{-1}]'
-        namez0_spinning_LVKM2= BPSmodelName + 'LVKM2 spinning > 0.05 intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
-        nameObs_spinning_LVKM2 = BPSmodelName + 'LVKM2 spinning > 0.05 observed (design LVK) [yr^{-1}]'
+        namez0_spinning_LVKM1 = BPSmodelName + 'LVKM1 spinning > %s intrinsic (z=0) [Gpc^{-3} yr^{-1}]'%spin_threshold
+        nameObs_spinning_LVKM1 = BPSmodelName + 'LVKM1 spinning > %s observed (design LVK) [yr^{-1}]'%spin_threshold
+        namez0_spinning_LVKM2= BPSmodelName + 'LVKM2 spinning > %s intrinsic (z=0) [Gpc^{-3} yr^{-1}]'%spin_threshold
+        nameObs_spinning_LVKM2 = BPSmodelName + 'LVKM2 spinning > %s observed (design LVK) [yr^{-1}]'%spin_threshold
 
         NAMES.append(namez0)
         NAMES.append(nameObs)
@@ -1089,6 +1072,8 @@ INITIALIZE_lightestBHfirst = False #True
 INITIALIZE_MRR_FormationChannels = False
 INITIALIZE_MRR_Spins = True
 
+# 
+spin_threshold=0.5
 
 
 if INITIALIZE_GENERAL==True:
@@ -1108,7 +1093,7 @@ if INITIALIZE_MRR_FormationChannels==True:
 
 if INITIALIZE_MRR_Spins==True:
     # initialize MRR formation channel file 
-    initialize_CSV_files_MRRspins(DCOname='BHBH')
+    initialize_CSV_files_MRRspins(DCOname='BHBH', spin_threshold=spin_threshold)
 
 #### RUN different simulation summaries : 
 runMejecta = False 
@@ -1130,7 +1115,7 @@ if runMRR_Spins==True:
         print(BPS)
         for DCOtype in ['BBH']:
             print('at DCOtype =', DCOtype)
-            writeToRatesFile_MRR_Spins(BPSmodelName=BPS, DCOtype=DCOtype)
+            writeToRatesFile_MRR_Spins(BPSmodelName=BPS, DCOtype=DCOtype, spin_threshold=spin_threshold)
             print('done with ', BPS)
 
 
