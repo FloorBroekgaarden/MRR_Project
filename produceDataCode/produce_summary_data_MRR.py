@@ -88,7 +88,7 @@ for ind_GSMF, GSMF in enumerate(GSMFs):
 
 
 #     # path for files 
-#     path_dir = '/Volumes/Andromeda/DATA/AllDCO_bugfix/'
+#     path_dir = '/Volumes/Andromeda2/DATA/AllDCO_bugfix/'
 #     path_ = path_dir
 #     path_ = path_ + alphabetDirDict[BPSmodelName] +'/'
 #     path  = path_ + 'COMPASCompactOutput_'+ DCOtype +'_' + BPSmodelName + '.h5'
@@ -331,7 +331,7 @@ for ind_GSMF, GSMF in enumerate(GSMFs):
 
 
 #     # path for files 
-#     path_dir = '/Volumes/Andromeda/DATA/AllDCO_bugfix/'
+#     path_dir = '/Volumes/Andromeda2/DATA/AllDCO_bugfix/'
 #     path_ = path_dir
 #     path_ = path_ + alphabetDirDict[BPSmodelName] +'/'
 #     path  = path_ + 'COMPASCompactOutput_'+ DCOtype +'_' + BPSmodelName + '.h5'
@@ -589,7 +589,7 @@ for ind_GSMF, GSMF in enumerate(GSMFs):
 
 
 #     # path for files 
-#     path_dir = '/Volumes/Andromeda/DATA/AllDCO_bugfix/'
+#     path_dir = '/Volumes/Andromeda2/DATA/AllDCO_bugfix/'
 #     path_ = path_dir
 #     path_ = path_ + alphabetDirDict[BPSmodelName] +'/'
 #     path  = path_ + 'COMPASCompactOutput_'+ DCOtype +'_' + BPSmodelName + '.h5'
@@ -847,7 +847,7 @@ def writeToRatesFile_MRR_Spins(BPSmodelName='Z', DCOtype='BHNS', spin_threshold=
 
 
     # path for files 
-    path_dir = '/Volumes/Andromeda/DATA/AllDCO_bugfix/'
+    path_dir = '/Volumes/Andromeda2/DATA/AllDCO_bugfix/'
     path_ = path_dir
     path_ = path_ + alphabetDirDict[BPSmodelName] +'/'
     path  = path_ + 'COMPASCompactOutput_'+ DCOtype +'_' + BPSmodelName + '.h5'
@@ -1062,7 +1062,334 @@ def initialize_CSV_files_MRRspins(DCOname='BHBH', spin_threshold=0.05):
 
 
 
+def initialize_CSV_files_MRR_nonMRR_ratio(DCOname='BHBH', spin_threshold=0.05, GWname='GW150629'):
 
+    # namesEMlist=[]
+
+    iii=0
+    
+
+    # CREATE PANDAS FILE 
+    nModels=26
+    BPSnameslist = list(string.ascii_uppercase)[0:nModels]
+
+    NAMES = []
+    stringgg =  'MRR_nonMRR_ratio_' + GWname 
+
+
+    for ind_l, BPSmodelName in enumerate(BPSnameslist):
+        # str_z0 = str(L + ' intrinsic (z=0) [Gpc^{-3} yr^{-1}]')
+        # str_obs = str(L + ' observed (design LVK) [yr^{-1}]')
+
+        namez0 = BPSmodelName + 'All intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
+        nameObs = BPSmodelName + 'All observed (design LVK) [yr^{-1}]'
+        namez0_MRR = BPSmodelName + 'MRR: matches GW contour intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
+        nameObs_MRR = BPSmodelName + 'MRR: matches GW contour observed (design LVK) [yr^{-1}]'
+        namez0_nonMRR = BPSmodelName + 'nonMRR: matches GW contour intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
+        nameObs_nonMRR = BPSmodelName + 'nonMRR: matches GW contour observed (design LVK) [yr^{-1}]'
+        
+        namez0_MRR_spin= BPSmodelName + 'MRR: matches GW contour spin2 < %s intrinsic (z=0) [Gpc^{-3} yr^{-1}]'%spin_threshold
+        nameObs_MRR_spin = BPSmodelName + 'MRR: matches GW contour spin2 < %s observed (design LVK) [yr^{-1}]'%spin_threshold
+        namez0_nonMRR_spin= BPSmodelName + 'nonMRR: matches GW contour spin1 < %s intrinsic (z=0) [Gpc^{-3} yr^{-1}]'%spin_threshold
+        nameObs_nonMRR_spin = BPSmodelName + 'nonMRR: matches GW contour spin1 < %s observed (design LVK) [yr^{-1}]'%spin_threshold
+
+        NAMES.append(namez0)
+        NAMES.append(nameObs)
+
+        NAMES.append(namez0_MRR)
+        NAMES.append(nameObs_MRR)
+        NAMES.append(namez0_nonMRR)
+        NAMES.append(nameObs_nonMRR)
+
+        NAMES.append(namez0_MRR_spin)
+        NAMES.append(nameObs_MRR_spin)
+        NAMES.append(namez0_nonMRR_spin)
+        NAMES.append(nameObs_nonMRR_spin)
+
+
+
+
+    datas=[]
+
+    for i in range(len(BPSnameslist)):
+        for ii in range(5):
+            datas.append(np.zeros_like(MSSFRnameslist))
+            datas.append(np.zeros_like(MSSFRnameslist))
+        
+        
+    df = pd.DataFrame(data=datas, index=NAMES, columns=MSSFRnameslistCSV).T
+    df.columns =   df.columns.map(str)
+    df.index.names = ['xyz']
+    df.columns.names = ['m']
+
+    # print(df) 
+
+    df.to_csv('/Users/floorbroekgaarden/Projects/GitHub/MRR_Project/dataFiles/rates_MSSFR_Models_'+DCOname+ '_' + stringgg + '.csv')
+
+
+
+
+
+def GW_credible_intervals(GW_name, mode):
+
+    # GW_list = ['GW151226','GW170729', 'GW190517_055101', 'GW190412','GW191109_010717'  ,'GW191103_012549', 'GW191126_115259']
+
+
+# for ind, GW_name in enumerate(GW_list):
+    print(GW_name)
+    
+    dfCSVname= '/Users/floorbroekgaarden/Projects/GitHub/MRR_Project/dataFiles/GWTC_posterior_samples/' 
+    dfCSVname_ = dfCSVname + 'posteriorSamples_' + GW_name  + '.csv' 
+
+
+    df = pd.read_csv(dfCSVname_, index_col=0, skiprows=[1])
+    mass_ratio = df['M2']/df['M1']
+    total_mass = df['M2'] + df['M1']
+    spin1 = df['spin1'] 
+    spin2 = df['spin2'] 
+    
+    chi_eff = df['chi_eff']
+    chirp_mass = chirpmass(df['M2'], df['M1'])
+    y_quantiles = [0.05, 0.5, 0.95]
+
+    if mode=='normal':
+    
+        total_mass_CI = weighted_quantile(values=total_mass, quantiles=y_quantiles)
+        mass1_CI = weighted_quantile(values=df['M1'], quantiles=y_quantiles)
+        mass2_CI = weighted_quantile(values=df['M2'], quantiles=y_quantiles)
+        chirp_mass_CI = weighted_quantile(values=chirp_mass, quantiles=y_quantiles)
+        mass_ratio_CI = weighted_quantile(values=mass_ratio, quantiles=y_quantiles)
+        spin1_CI = weighted_quantile(values=spin1, quantiles=y_quantiles)    
+        spin2_CI = weighted_quantile(values=spin2, quantiles=y_quantiles)    
+        chi_eff_quantiles = weighted_quantile(values=chi_eff, quantiles=y_quantiles)    
+
+    elif mode=='spin1_is_zero':
+        
+        mask_spin = abs(spin1)<0.05 # non MRR, spin 2 is the spinning one, we want spin1 to be zero 
+        total_mass_CI = weighted_quantile(values=total_mass[mask_spin], quantiles=y_quantiles)
+        mass1_CI = weighted_quantile(values=df['M1'][mask_spin], quantiles=y_quantiles)
+        mass2_CI = weighted_quantile(values=df['M2'][mask_spin], quantiles=y_quantiles)
+        chirp_mass_CI = weighted_quantile(values=chirp_mass[mask_spin], quantiles=y_quantiles)
+        mass_ratio_CI = weighted_quantile(values=mass_ratio[mask_spin], quantiles=y_quantiles)
+        spin1_CI = weighted_quantile(values=spin1[mask_spin], quantiles=y_quantiles)    
+        spin2_CI = weighted_quantile(values=spin2[mask_spin], quantiles=y_quantiles)    
+        chi_eff_quantiles = weighted_quantile(values=chi_eff[mask_spin], quantiles=y_quantiles)   
+
+    elif  mode=='spin1_is_zero':
+        mask_spin = abs(spin2)<0.05 # MRR spin1 is the spinning one, we want the other one to be zero
+        total_mass_CI = weighted_quantile(values=total_mass[mask_spin], quantiles=y_quantiles)
+        mass1_CI = weighted_quantile(values=df['M1'][mask_spin], quantiles=y_quantiles)
+        mass2_CI = weighted_quantile(values=df['M2'][mask_spin], quantiles=y_quantiles)
+        chirp_mass_CI = weighted_quantile(values=chirp_mass[mask_spin], quantiles=y_quantiles)
+        mass_ratio_CI = weighted_quantile(values=mass_ratio[mask_spin], quantiles=y_quantiles)
+        spin1_CI = weighted_quantile(values=spin1[mask_spin], quantiles=y_quantiles)    
+        spin2_CI = weighted_quantile(values=spin2[mask_spin], quantiles=y_quantiles)    
+        chi_eff_quantiles = weighted_quantile(values=chi_eff[mask_spin], quantiles=y_quantiles)   
+
+    return total_mass_CI, mass1_CI, mass2_CI, chirp_mass_CI, mass_ratio_CI, spin1_CI, spin2_CI, chi_eff_quantiles
+    
+
+
+
+def writeToRatesFile_MRR_nonMRR_ratio(BPSmodelName='Z', DCOtype='BHNS', spin_threshold=0.05, GWname='GW150629'):
+    """writes NS-BH rate to CSV file for all models"""
+
+    print('running Ratio for ', GWname)
+
+    if DCOtype=='BHNS':
+        DCOname='BHNS'
+    elif DCOtype=='BBH':
+        DCOname='BHBH'
+    elif DCOtype=='BNS':
+        DCOname='NSNS'
+
+
+    # path for files 
+    path_dir = '/Volumes/Andromeda2/DATA/AllDCO_bugfix/'
+    path_ = path_dir
+    path_ = path_ + alphabetDirDict[BPSmodelName] +'/'
+    path  = path_ + 'COMPASCompactOutput_'+ DCOtype +'_' + BPSmodelName + '.h5'
+            
+    # read in data 
+    fdata = h5.File(path, 'r')
+    fDCO      = fdata['doubleCompactObjects'] # hdf5 file with the DCO information
+    fSN       = fdata['supernovae']  # hdf5 file with the SN information
+    #
+    M1 = fDCO['M1'][...].squeeze()   # Compact object mass [Msun] of the initially more massive star
+    M2 = fDCO['M2'][...].squeeze()  # Compact object mass [Msun] of the initially less massive star
+
+    print('using indices')
+    seedsDCO = fDCO['seed'][...].squeeze()  # get the seeds in the DCO file 
+    seedsSN = fSN['randomSeed'][...].squeeze()    # get the seeds in the SN file 
+    indices = np.sort(np.unique(seedsSN[1::2], return_index=True)[1])
+    maskSNdco = np.in1d(seedsSN,  seedsDCO) # mask in the SNe files the SNe that correspond to our DCO
+    whichSN = fSN['whichStar'][...].squeeze()[maskSNdco]  # this is 1 if the initially primary star goes SN and 2 if the secondary goes supernova     
+    whichSN2 = whichSN[1::2][indices]
+
+    # either SN2 = primary (1) and M1 is > M2, or SN2 = secondary & M1 < M2 
+    # this takes into account (first term) rejuvenation 
+    MRR_mask = ((whichSN2==1) & (M1>M2) ) | ((whichSN2==2) & (M1<M2)) 
+
+    M1LVK, M2LVK = obtainM1BHandM2BHassymetric(M1, M2)
+    chirp_mass = chirpmass(M1LVK, M2LVK)
+    mass_ratio_LVK =  M2LVK/M1
+
+    del M1
+    del M2
+    del whichSN2
+    del whichSN
+    del maskSNdco
+    del indices
+    del seedsSN
+    del seedsDCO
+    del fDCO
+    del fSN
+
+    fdata.close()
+
+
+
+    spin = COspin(data_path=path, state='he_depletion')  # set class 
+    spin.setCOMPASData() # reads in the COMPAS DCO parameters 
+    spinMZAMS1, spinMZAMS2  = spin.BaveraSpin()
+
+
+    spinLVKM1, spinLVKM2 = np.zeros_like(spinMZAMS1), np.zeros_like(spinMZAMS1)
+    spinLVKM1[MRR_mask] = spinMZAMS2[MRR_mask]  # MRR so M1 comes from M2ZAMS, we assign it spin from M2ZAMS
+    spinLVKM1[~MRR_mask] = spinMZAMS1[~MRR_mask]  # no MRR so M1 comes from M1ZAMS, we assign it spin from M1ZAMS
+    spinLVKM2[MRR_mask] = spinMZAMS1[MRR_mask]   # MRR so M2 comes from M1ZAMS, we assign it spin from M1ZAMS
+    spinLVKM2[~MRR_mask] = spinMZAMS2[~MRR_mask]   # no MRR so M2 comes from M2ZAMS, we assign it spin from M2ZAMS     
+
+    chi_eff = ((spinLVKM1*M1LVK) + (spinLVKM2*M2LVK)) / (M1LVK + M2LVK)
+
+
+    # spin_threshold = 0.05 # definition of "spinning BH"
+
+
+        
+    total_mass_CI, mass1_CI, mass2_CI, chirp_mass_CI, mass_ratio_CI, spin1_CI, spin2_CI, chi_eff_CI = GW_credible_intervals(GWname, mode='normal')
+    mask_GW =  (total_mass_CI[0]<=(M1LVK+M2LVK))  & ((M1LVK+M2LVK)<=total_mass_CI[2])  &  (chirp_mass_CI[0]<=chirp_mass) & (chirp_mass<=chirp_mass_CI[2])  & (mass_ratio_CI[0]<= mass_ratio_LVK) & (mass_ratio_LVK<=mass_ratio_CI[2]) & (chi_eff_CI[0]<=chi_eff) & (chi_eff<=chi_eff_CI[2])
+    mask_GW_MRR = (mask_GW==1) & (MRR_mask==1)
+    mask_GW_nonMRR = (mask_GW==1) & (MRR_mask==0)
+
+    total_mass_CI, mass1_CI, mass2_CI, chirp_mass_CI, mass_ratio_CI, spin1_CI, spin2_CI, chi_eff_CI = GW_credible_intervals(GWname, mode='spin1_is_zero')
+    mask_spin1_zero =  (total_mass_CI[0]<=(M1LVK+M2LVK))  & ((M1LVK+M2LVK)<=total_mass_CI[2])  &  (chirp_mass_CI[0]<=chirp_mass) & (chirp_mass<=chirp_mass_CI[2])  & (mass_ratio_CI[0]<= mass_ratio_LVK) & (mass_ratio_LVK<=mass_ratio_CI[2]) & (chi_eff_CI[0]<=chi_eff) & (chi_eff<=chi_eff_CI[2])
+    total_mass_CI, mass1_CI, mass2_CI, chirp_mass_CI, mass_ratio_CI, spin1_CI, spin2_CI, chi_eff_CI = GW_credible_intervals(GWname, mode='spin2_is_zero')
+    mask_spin2_zero =  (total_mass_CI[0]<=(M1LVK+M2LVK))  & ((M1LVK+M2LVK)<=total_mass_CI[2])  &  (chirp_mass_CI[0]<=chirp_mass) & (chirp_mass<=chirp_mass_CI[2])  & (mass_ratio_CI[0]<= mass_ratio_LVK) & (mass_ratio_LVK<=mass_ratio_CI[2]) & (chi_eff_CI[0]<=chi_eff) & (chi_eff<=chi_eff_CI[2])
+
+
+    mask_spin2zero_MRR = (mask_spin2_zero==1) & (MRR_mask==1)
+    mask_spin1zero_nonMRR = (mask_spin1_zero==1) & (MRR_mask==0)
+
+
+    # get intrinsic weights
+    fparam_intrinsic = 'weights_intrinsic'
+    # get detected weights
+    fparam_detected = 'weights_detected'
+
+
+
+
+    ####################################################
+    ######### ITERATE  OVER  MSSFR  MODELS #############
+    ####################################################
+    intrinsicRates = np.zeros(len(MSSFRnameslist))
+    detectedRates = np.zeros(len(MSSFRnameslist))
+    # namesEMlist = []
+
+    intrinsicRates_MRR = np.zeros(len(MSSFRnameslist))
+    detectedRates_MRR = np.zeros(len(MSSFRnameslist))
+    intrinsicRates_nonMRR = np.zeros(len(MSSFRnameslist))
+    detectedRates_nonMRR = np.zeros(len(MSSFRnameslist))
+
+    intrinsicRates_MRR_spin = np.zeros(len(MSSFRnameslist))
+    detectedRates_MRR_spin = np.zeros(len(MSSFRnameslist))
+    intrinsicRates_nonMRR_spin = np.zeros(len(MSSFRnameslist))
+    detectedRates_nonMRR_spin = np.zeros(len(MSSFRnameslist))
+
+
+    fdata = h5.File(path)
+
+    DCOSeeds = fdata['doubleCompactObjects']['seed'][...].squeeze()
+
+    for ind_mssfr, mssfr in enumerate(MSSFRnameslist):
+
+        weightheader = 'w_' + mssfr
+        # print(ind_mssfr, weightheader)
+        w_int = fdata[fparam_intrinsic][weightheader][...].squeeze()
+        w_det = fdata[fparam_detected][weightheader][...].squeeze()
+
+        # ALL BBH RATES 
+        intrinsicRates[ind_mssfr] = np.sum(w_int)
+        detectedRates[ind_mssfr] = np.sum(w_det)
+        
+        # MASS RATIO REVERSAL RATE ALL CHANNELS 
+        intrinsicRates_MRR[ind_mssfr] = np.sum(w_int[mask_GW_MRR])
+        detectedRates_MRR[ind_mssfr] = np.sum(w_det[mask_GW_MRR])
+        intrinsicRates_nonMRR[ind_mssfr] = np.sum(w_int[mask_GW_nonMRR])
+        detectedRates_nonMRR[ind_mssfr] = np.sum(w_det[mask_GW_nonMRR])
+
+        intrinsicRates_MRR_spin[ind_mssfr] = np.sum(w_int[mask_spin2zero_MRR])
+        detectedRates_MRR_spin[ind_mssfr] = np.sum(w_det[mask_spin2zero_MRR])       
+        intrinsicRates_nonMRR_spin[ind_mssfr] = np.sum(w_int[mask_spin1zero_nonMRR])
+        detectedRates_nonMRR_spin[ind_mssfr] = np.sum(w_det[mask_spin1zero_nonMRR])     
+
+
+
+    fdata.close()  
+
+    stringgg =  'MRR_nonMRR_ratio_' + GWname 
+
+    df = pd.read_csv('/Users/floorbroekgaarden/Projects/GitHub/MRR_Project/dataFiles/rates_MSSFR_Models_'+DCOname+ '_' + stringgg + '.csv', index_col=0)
+    namez0 = BPSmodelName + 'All intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
+    nameObs = BPSmodelName + 'All observed (design LVK) [yr^{-1}]'
+    namez0_MRR = BPSmodelName + 'MRR: matches GW contour intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
+    nameObs_MRR = BPSmodelName + 'MRR: matches GW contour observed (design LVK) [yr^{-1}]'
+    namez0_nonMRR = BPSmodelName + 'nonMRR: matches GW contour intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
+    nameObs_nonMRR = BPSmodelName + 'nonMRR: matches GW contour observed (design LVK) [yr^{-1}]'
+    
+    namez0_MRR_spin= BPSmodelName + 'MRR: matches GW contour spin2 < %s intrinsic (z=0) [Gpc^{-3} yr^{-1}]'%spin_threshold
+    nameObs_MRR_spin = BPSmodelName + 'MRR: matches GW contour spin2 < %s observed (design LVK) [yr^{-1}]'%spin_threshold
+    namez0_nonMRR_spin= BPSmodelName + 'nonMRR: matches GW contour spin1 < %s intrinsic (z=0) [Gpc^{-3} yr^{-1}]'%spin_threshold
+    nameObs_nonMRR_spin = BPSmodelName + 'nonMRR: matches GW contour spin1 < %s observed (design LVK) [yr^{-1}]'%spin_threshold
+
+
+
+    df[namez0]                      = intrinsicRates
+    df[nameObs]                     = detectedRates
+
+    df[namez0_MRR]              = intrinsicRates_MRR
+    df[nameObs_MRR]             = detectedRates_MRR
+    df[namez0_nonMRR]              = intrinsicRates_nonMRR
+    df[nameObs_nonMRR]             = detectedRates_nonMRR
+
+    df[namez0_MRR_spin]          = intrinsicRates_MRR_spin
+    df[nameObs_MRR_spin]         = detectedRates_MRR_spin
+    df[namez0_nonMRR_spin]       = intrinsicRates_nonMRR_spin
+    df[nameObs_nonMRR_spin]      = detectedRates_nonMRR_spin
+ 
+
+
+    df.to_csv('/Users/floorbroekgaarden/Projects/GitHub/MRR_Project/dataFiles/rates_MSSFR_Models_'+DCOname+ '_' + stringgg + '.csv')
+
+
+
+
+
+
+
+    fdata.close()
+
+
+
+
+
+
+
+
+
+
+GW_MRR_list = ['GW151226','GW170729', 'GW190517_055101', 'GW190412','GW191109_010717'  ,'GW191103_012549', 'GW191126_115259']
 
 
 
@@ -1070,16 +1397,25 @@ def initialize_CSV_files_MRRspins(DCOname='BHBH', spin_threshold=0.05):
 INITIALIZE_GENERAL = False # True #False #True #False#True #False
 INITIALIZE_lightestBHfirst = False #True
 INITIALIZE_MRR_FormationChannels = False
-INITIALIZE_MRR_Spins = True
-
+INITIALIZE_MRR_Spins = False
+INITIALIZE_runMRR_nonMRR_ratio = True
 # 
-spin_threshold=0.5
+spin_threshold=0.05
 
 
 if INITIALIZE_GENERAL==True:
     # initialize_CSV_files_general(DCOname='BHNS')
     initialize_CSV_files_general(DCOname='BHBH')
     # initialize_CSV_files_general(DCOname='NSNS')
+
+
+if INITIALIZE_runMRR_nonMRR_ratio==True:
+    for GWname in GW_MRR_list:
+        print('initializing ', GWname)
+        # initialize_CSV_files_general(DCOname='BHNS')
+        initialize_CSV_files_MRR_nonMRR_ratio(DCOname='BHBH', spin_threshold=spin_threshold, GWname=GWname)
+
+
 
 if INITIALIZE_lightestBHfirst==True:
     # initialize_CSV_files_general(DCOname='BHNS')
@@ -1102,10 +1438,22 @@ runNSBH = False
 runGeneralBHNS = False
 runGeneralBHBH = False
 runGeneralNSNS = False
-  
+
+
 runLightestFormsFirst=False
 runMRR_FormationChannels = False
-runMRR_Spins = True
+runMRR_Spins = False
+runMRR_nonMRR_ratio = True
+
+
+
+if runMRR_nonMRR_ratio==True:
+    for BPS in ['A','B',  'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T' ]:
+        print(BPS)
+        for DCOtype in ['BBH']:
+            print('at DCOtype =', DCOtype)
+            writeToRatesFile_MRR_Spins(BPSmodelName=BPS, DCOtype=DCOtype, spin_threshold=spin_threshold)
+            print('done with ', BPS)
 
 
 
@@ -1114,9 +1462,10 @@ if runMRR_Spins==True:
     for BPS in ['A','B',  'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T' ]:
         print(BPS)
         for DCOtype in ['BBH']:
-            print('at DCOtype =', DCOtype)
-            writeToRatesFile_MRR_Spins(BPSmodelName=BPS, DCOtype=DCOtype, spin_threshold=spin_threshold)
-            print('done with ', BPS)
+            for GWname in GW_MRR_list:
+                print('at DCOtype =', DCOtype)
+                writeToRatesFile_MRR_nonMRR_ratio(BPSmodelName=BPS, DCOtype=DCOtype, spin_threshold=spin_threshold,GWname=GWname)
+                print('done with ', BPS)
 
 
 
@@ -1304,17 +1653,17 @@ if runGeneralBHBH ==True:
 
 # for DCOtype in ['BHNS', 'BBH', 'BNS']:
 #   print('at DCOtype =', DCOtype)
-#   pathCOMPASOutput = '/Volumes/Andromeda/DATA/AllDCO/fiducial/'
+#   pathCOMPASOutput = '/Volumes/Andromeda2/DATA/AllDCO/fiducial/'
 #   modelname = 'A'
 #   writeToRatesFile(modelname=modelname, pathCOMPASOutput=pathCOMPASOutput, DCOtype=DCOtype, Optmistic=False)
 
 
-#   pathCOMPASOutput = '/Volumes/Andromeda/DATA/AllDCO/fiducial/'
+#   pathCOMPASOutput = '/Volumes/Andromeda2/DATA/AllDCO/fiducial/'
 #   modelname = 'B'
 #   writeToRatesFile(modelname=modelname, pathCOMPASOutput=pathCOMPASOutput, DCOtype=DCOtype, Optmistic=True)
 
 
-#   pathCOMPASOutput = '/Volumes/Andromeda/DATA/AllDCO/zeroBHkick/'
+#   pathCOMPASOutput = '/Volumes/Andromeda2/DATA/AllDCO/zeroBHkick/'
 #   modelname = 'G'
 #   writeToRatesFile(modelname=modelname, pa thCOMPASOutput=pathCOMPASOutput, DCOtype=DCOtype, Optmistic=True)
 
@@ -1558,19 +1907,19 @@ if runGeneralBHBH ==True:
 
 # #     for Rns in enumerate()
 
-# #     pathCOMPASOutput = '/Volumes/Andromeda/DATA/AllDCO/zeroBHkick/'
+# #     pathCOMPASOutput = '/Volumes/Andromeda2/DATA/AllDCO/zeroBHkick/'
 # #     modelname = 'G'
 # #     print('modelname')
 # #     writeToRatesFile(modelname=modelname, pathCOMPASOutput=pathCOMPASOutput, DCOtype=DCOtype, Optmistic=True)
 
 # #     print('at DCOtype =', DCOtype)
-# #     pathCOMPASOutput = '/Volumes/Andromeda/DATA/AllDCO/fiducial/'
+# #     pathCOMPASOutput = '/Volumes/Andromeda2/DATA/AllDCO/fiducial/'
 # #     modelname = 'A'
 # #     print('modelname')
 # #     writeToRatesFile(modelname=modelname, pathCOMPASOutput=pathCOMPASOutput, DCOtype=DCOtype, Optmistic=False)
 
 
-# #     pathCOMPASOutput = '/Volumes/Andromeda/DATA/AllDCO/fiducial/'
+# #     pathCOMPASOutput = '/Volumes/Andromeda2/DATA/AllDCO/fiducial/'
 # #     modelname = 'B'
 # #     print('modelname')
 # #     writeToRatesFile(modelname=modelname, pathCOMPASOutput=pathCOMPASOutput, DCOtype=DCOtype, Optmistic=True)
@@ -1582,19 +1931,19 @@ if runGeneralBHBH ==True:
 
 # #     for Rns in enumerate()
 
-# #     pathCOMPASOutput = '/Volumes/Andromeda/DATA/AllDCO/zeroBHkick/'
+# #     pathCOMPASOutput = '/Volumes/Andromeda2/DATA/AllDCO/zeroBHkick/'
 # #     modelname = 'G'
 # #     print('modelname')
 # #     writeToRatesFile(modelname=modelname, pathCOMPASOutput=pathCOMPASOutput, DCOtype=DCOtype, Optmistic=True)
 
 # #     print('at DCOtype =', DCOtype)
-# #     pathCOMPASOutput = '/Volumes/Andromeda/DATA/AllDCO/fiducial/'
+# #     pathCOMPASOutput = '/Volumes/Andromeda2/DATA/AllDCO/fiducial/'
 # #     modelname = 'A'
 # #     print('modelname')
 # #     writeToRatesFile(modelname=modelname, pathCOMPASOutput=pathCOMPASOutput, DCOtype=DCOtype, Optmistic=False)
 
 
-# #     pathCOMPASOutput = '/Volumes/Andromeda/DATA/AllDCO/fiducial/'
+# #     pathCOMPASOutput = '/Volumes/Andromeda2/DATA/AllDCO/fiducial/'
 # #     modelname = 'B'
 # #     print('modelname')
 # #     writeToRatesFile(modelname=modelname, pathCOMPASOutput=pathCOMPASOutput, DCOtype=DCOtype, Optmistic=True)
@@ -1603,7 +1952,7 @@ if runGeneralBHBH ==True:
 
 
 
-# # pathCOMPASOutput = '/Volumes/Andromeda/DATA/AllDCO/alpha0_5/'
+# # pathCOMPASOutput = '/Volumes/Andromeda2/DATA/AllDCO/alpha0_5/'
 # # modelname, DCOtype = 'M', 'BNS'
 # # writeToRatesFile(modelname=modelname, pathCOMPASOutput=pathCOMPASOutput, DCOtype=DCOtype, Optmistic=False)
 
@@ -1615,7 +1964,7 @@ if runGeneralBHBH ==True:
 
 
 
-# # pathCOMPASOutput = '/Volumes/Andromeda/DATA/AllDCO/alpha2_0/'
+# # pathCOMPASOutput = '/Volumes/Andromeda2/DATA/AllDCO/alpha2_0/'
 # # modelname, DCOtype = 'N', 'BNS'
 # # writeToRatesFile(modelname=modelname, pathCOMPASOutput=pathCOMPASOutput, DCOtype=DCOtype, Optmistic=False)
 
