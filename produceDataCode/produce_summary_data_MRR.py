@@ -1083,6 +1083,7 @@ def initialize_CSV_files_MRR_nonMRR_ratio(DCOname='BHBH', spin_threshold=0.05, G
 
         namez0 = BPSmodelName + 'All intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
         nameObs = BPSmodelName + 'All observed (design LVK) [yr^{-1}]'
+        
         namez0_MRR = BPSmodelName + 'MRR: matches GW contour intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
         nameObs_MRR = BPSmodelName + 'MRR: matches GW contour observed (design LVK) [yr^{-1}]'
         namez0_nonMRR = BPSmodelName + 'nonMRR: matches GW contour intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
@@ -1092,6 +1093,8 @@ def initialize_CSV_files_MRR_nonMRR_ratio(DCOname='BHBH', spin_threshold=0.05, G
         nameObs_MRR_spin = BPSmodelName + 'MRR: matches GW contour spin2 < %s observed (design LVK) [yr^{-1}]'%spin_threshold
         namez0_nonMRR_spin= BPSmodelName + 'nonMRR: matches GW contour spin1 < %s intrinsic (z=0) [Gpc^{-3} yr^{-1}]'%spin_threshold
         nameObs_nonMRR_spin = BPSmodelName + 'nonMRR: matches GW contour spin1 < %s observed (design LVK) [yr^{-1}]'%spin_threshold
+
+
 
         NAMES.append(namez0)
         NAMES.append(nameObs)
@@ -1134,9 +1137,6 @@ def GW_credible_intervals(GW_name, mode):
 
     # GW_list = ['GW151226','GW170729', 'GW190517_055101', 'GW190412','GW191109_010717'  ,'GW191103_012549', 'GW191126_115259']
 
-
-# for ind, GW_name in enumerate(GW_list):
-    print(GW_name)
     
     dfCSVname= '/Users/floorbroekgaarden/Projects/GitHub/MRR_Project/dataFiles/GWTC_posterior_samples/' 
     dfCSVname_ = dfCSVname + 'posteriorSamples_' + GW_name  + '.csv' 
@@ -1164,8 +1164,7 @@ def GW_credible_intervals(GW_name, mode):
         chi_eff_quantiles = weighted_quantile(values=chi_eff, quantiles=y_quantiles)    
 
     elif mode=='spin1_is_zero':
-        
-        mask_spin = abs(spin1)<0.05 # non MRR, spin 2 is the spinning one, we want spin1 to be zero 
+        mask_spin = (abs(spin1)<0.05) & (spin2>0.05) # non MRR, spin 2 is the spinning one, we want spin1 to be zero 
         total_mass_CI = weighted_quantile(values=total_mass[mask_spin], quantiles=y_quantiles)
         mass1_CI = weighted_quantile(values=df['M1'][mask_spin], quantiles=y_quantiles)
         mass2_CI = weighted_quantile(values=df['M2'][mask_spin], quantiles=y_quantiles)
@@ -1175,8 +1174,8 @@ def GW_credible_intervals(GW_name, mode):
         spin2_CI = weighted_quantile(values=spin2[mask_spin], quantiles=y_quantiles)    
         chi_eff_quantiles = weighted_quantile(values=chi_eff[mask_spin], quantiles=y_quantiles)   
 
-    elif  mode=='spin1_is_zero':
-        mask_spin = abs(spin2)<0.05 # MRR spin1 is the spinning one, we want the other one to be zero
+    elif  mode=='spin2_is_zero':
+        mask_spin = (abs(spin2)<0.05) & (spin1>0.05)  # MRR spin1 is the spinning one, we want the other one to be zero
         total_mass_CI = weighted_quantile(values=total_mass[mask_spin], quantiles=y_quantiles)
         mass1_CI = weighted_quantile(values=df['M1'][mask_spin], quantiles=y_quantiles)
         mass2_CI = weighted_quantile(values=df['M2'][mask_spin], quantiles=y_quantiles)
@@ -1194,7 +1193,6 @@ def GW_credible_intervals(GW_name, mode):
 def writeToRatesFile_MRR_nonMRR_ratio(BPSmodelName='Z', DCOtype='BHNS', spin_threshold=0.05, GWname='GW150629'):
     """writes NS-BH rate to CSV file for all models"""
 
-    print('running Ratio for ', GWname)
 
     if DCOtype=='BHNS':
         DCOname='BHNS'
@@ -1232,7 +1230,7 @@ def writeToRatesFile_MRR_nonMRR_ratio(BPSmodelName='Z', DCOtype='BHNS', spin_thr
 
     M1LVK, M2LVK = obtainM1BHandM2BHassymetric(M1, M2)
     chirp_mass = chirpmass(M1LVK, M2LVK)
-    mass_ratio_LVK =  M2LVK/M1
+    mass_ratio_LVK =  M2LVK/M1LVK
 
     del M1
     del M2
@@ -1268,14 +1266,15 @@ def writeToRatesFile_MRR_nonMRR_ratio(BPSmodelName='Z', DCOtype='BHNS', spin_thr
 
         
     total_mass_CI, mass1_CI, mass2_CI, chirp_mass_CI, mass_ratio_CI, spin1_CI, spin2_CI, chi_eff_CI = GW_credible_intervals(GWname, mode='normal')
-    mask_GW =  (total_mass_CI[0]<=(M1LVK+M2LVK))  & ((M1LVK+M2LVK)<=total_mass_CI[2])  &  (chirp_mass_CI[0]<=chirp_mass) & (chirp_mass<=chirp_mass_CI[2])  & (mass_ratio_CI[0]<= mass_ratio_LVK) & (mass_ratio_LVK<=mass_ratio_CI[2]) & (chi_eff_CI[0]<=chi_eff) & (chi_eff<=chi_eff_CI[2])
+    mask_GW =  (total_mass_CI[0]<=(M1LVK+M2LVK))  & ((M1LVK+M2LVK)<=total_mass_CI[2])  &  (chirp_mass_CI[0]<=chirp_mass) & (chirp_mass<=chirp_mass_CI[2])  & (mass_ratio_CI[0]<= mass_ratio_LVK) & (mass_ratio_LVK<=mass_ratio_CI[2]) & (chi_eff_CI[0]<=chi_eff) & (chi_eff<=chi_eff_CI[2]) & (mass1_CI[0]<= M1LVK) & (M1LVK<=mass1_CI[2]) & (mass2_CI[0]<= M2LVK) & (M2LVK<=mass2_CI[2])
     mask_GW_MRR = (mask_GW==1) & (MRR_mask==1)
     mask_GW_nonMRR = (mask_GW==1) & (MRR_mask==0)
 
+
     total_mass_CI, mass1_CI, mass2_CI, chirp_mass_CI, mass_ratio_CI, spin1_CI, spin2_CI, chi_eff_CI = GW_credible_intervals(GWname, mode='spin1_is_zero')
-    mask_spin1_zero =  (total_mass_CI[0]<=(M1LVK+M2LVK))  & ((M1LVK+M2LVK)<=total_mass_CI[2])  &  (chirp_mass_CI[0]<=chirp_mass) & (chirp_mass<=chirp_mass_CI[2])  & (mass_ratio_CI[0]<= mass_ratio_LVK) & (mass_ratio_LVK<=mass_ratio_CI[2]) & (chi_eff_CI[0]<=chi_eff) & (chi_eff<=chi_eff_CI[2])
+    mask_spin1_zero =  (total_mass_CI[0]<=(M1LVK+M2LVK))  & ((M1LVK+M2LVK)<=total_mass_CI[2])  &  (chirp_mass_CI[0]<=chirp_mass) & (chirp_mass<=chirp_mass_CI[2]) & (mass_ratio_CI[0]<= mass_ratio_LVK) & (mass_ratio_LVK<=mass_ratio_CI[2]) & (chi_eff_CI[0]<=chi_eff) & (chi_eff<=chi_eff_CI[2]) & (mass1_CI[0]<= M1LVK) & (M1LVK<=mass1_CI[2]) & (mass2_CI[0]<= M2LVK) & (M2LVK<=mass2_CI[2])# &  (spin2_CI[0]<=spinLVKM2 ) & (spinLVKM2<=spin2_CI[2]) 
     total_mass_CI, mass1_CI, mass2_CI, chirp_mass_CI, mass_ratio_CI, spin1_CI, spin2_CI, chi_eff_CI = GW_credible_intervals(GWname, mode='spin2_is_zero')
-    mask_spin2_zero =  (total_mass_CI[0]<=(M1LVK+M2LVK))  & ((M1LVK+M2LVK)<=total_mass_CI[2])  &  (chirp_mass_CI[0]<=chirp_mass) & (chirp_mass<=chirp_mass_CI[2])  & (mass_ratio_CI[0]<= mass_ratio_LVK) & (mass_ratio_LVK<=mass_ratio_CI[2]) & (chi_eff_CI[0]<=chi_eff) & (chi_eff<=chi_eff_CI[2])
+    mask_spin2_zero =  (total_mass_CI[0]<=(M1LVK+M2LVK))  & ((M1LVK+M2LVK)<=total_mass_CI[2])  &  (chirp_mass_CI[0]<=chirp_mass) & (chirp_mass<=chirp_mass_CI[2]) & (mass_ratio_CI[0]<= mass_ratio_LVK) & (mass_ratio_LVK<=mass_ratio_CI[2]) & (chi_eff_CI[0]<=chi_eff) & (chi_eff<=chi_eff_CI[2]) & (mass1_CI[0]<= M1LVK) & (M1LVK<=mass1_CI[2]) & (mass2_CI[0]<= M2LVK) & (M2LVK<=mass2_CI[2]) # &  (spin1_CI[0]<=spinLVKM1 ) & (spinLVKM1<=spin1_CI[2]) 
 
 
     mask_spin2zero_MRR = (mask_spin2_zero==1) & (MRR_mask==1)
@@ -1343,6 +1342,7 @@ def writeToRatesFile_MRR_nonMRR_ratio(BPSmodelName='Z', DCOtype='BHNS', spin_thr
     df = pd.read_csv('/Users/floorbroekgaarden/Projects/GitHub/MRR_Project/dataFiles/rates_MSSFR_Models_'+DCOname+ '_' + stringgg + '.csv', index_col=0)
     namez0 = BPSmodelName + 'All intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
     nameObs = BPSmodelName + 'All observed (design LVK) [yr^{-1}]'
+
     namez0_MRR = BPSmodelName + 'MRR: matches GW contour intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
     nameObs_MRR = BPSmodelName + 'MRR: matches GW contour observed (design LVK) [yr^{-1}]'
     namez0_nonMRR = BPSmodelName + 'nonMRR: matches GW contour intrinsic (z=0) [Gpc^{-3} yr^{-1}]'
@@ -1398,7 +1398,7 @@ INITIALIZE_GENERAL = False # True #False #True #False#True #False
 INITIALIZE_lightestBHfirst = False #True
 INITIALIZE_MRR_FormationChannels = False
 INITIALIZE_MRR_Spins = False
-INITIALIZE_runMRR_nonMRR_ratio = True
+INITIALIZE_runMRR_nonMRR_ratio = False
 # 
 spin_threshold=0.05
 
@@ -1449,11 +1449,19 @@ runMRR_nonMRR_ratio = True
 
 if runMRR_nonMRR_ratio==True:
     for BPS in ['A','B',  'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T' ]:
+    # for BPS in ['N', 'O', 'P', 'Q', 'R', 'S', 'T' ]:
         print(BPS)
         for DCOtype in ['BBH']:
             print('at DCOtype =', DCOtype)
-            writeToRatesFile_MRR_Spins(BPSmodelName=BPS, DCOtype=DCOtype, spin_threshold=spin_threshold)
+            # for GWname in GW_MRR_list:
+            for GWname in [GW_MRR_list[0]]:
+                print('at GW =', GWname)
+                writeToRatesFile_MRR_nonMRR_ratio(BPSmodelName=BPS, DCOtype=DCOtype, spin_threshold=spin_threshold, GWname=GWname)
+
             print('done with ', BPS)
+            print('----------------')
+            print()
+
 
 
 
@@ -1462,10 +1470,7 @@ if runMRR_Spins==True:
     for BPS in ['A','B',  'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T' ]:
         print(BPS)
         for DCOtype in ['BBH']:
-            for GWname in GW_MRR_list:
-                print('at DCOtype =', DCOtype)
-                writeToRatesFile_MRR_nonMRR_ratio(BPSmodelName=BPS, DCOtype=DCOtype, spin_threshold=spin_threshold,GWname=GWname)
-                print('done with ', BPS)
+            writeToRatesFile_MRR_Spins(BPSmodelName=BPS, DCOtype=DCOtype, spin_threshold=spin_threshold)
 
 
 
