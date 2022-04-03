@@ -56,6 +56,9 @@ fs = 24 # fontsize for plots
 rc('axes', linewidth=2)
 
 
+
+
+
 def layoutAxes(ax, nameX='', nameY='', \
                labelSizeMajor = 10, fontsize = 25, second=False, labelpad=None, setMinor=True, ):
     """
@@ -101,6 +104,7 @@ def layoutAxes(ax, nameX='', nameY='', \
         ax.yaxis.set_minor_locator(AutoMinorLocator())
 
     return ax
+
 
 
 def layoutAxesNoXandYlabel(ax, nameX='', nameY='', \
@@ -306,6 +310,12 @@ modelDirList = ['fiducial', 'massTransferEfficiencyFixed_0_25', 'massTransferEff
 alphabetDirDict =  {BPSnameslist[i]: modelDirList[i] for i in range(len(BPSnameslist))}
 BPScolors       = sns.color_palette("husl", nModels)
 colorDirDict =  {BPSnameslist[i]: BPScolors[i] for i in range(len(BPSnameslist))}
+
+
+markershapes = ["*", "o", "v",  "p", "H", "^", ">", 'X', "+","<", 'x', "3","d","1", "|", "D", "P", "X", "+", "d"]
+dictMarkerShape = {BPSnameslist[i]: markershapes[i] for i in range(len(BPSnameslist))}
+
+
 
 # physicalNamesBPSmodels = [r'\textbf{fiducial}',\
 #                            r'$\beta=0.25$', r'$\beta=0.5$',  r'$\beta=0.75$',r'\textbf{unstable case BB}',r'\textbf{unstable case BB + optimistic CE}',\

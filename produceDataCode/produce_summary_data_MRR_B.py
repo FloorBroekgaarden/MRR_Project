@@ -1282,7 +1282,6 @@ def writeToRatesFile_MRR_nonMRR_ratio(BPSmodelName='Z', DCOtype='BHNS', spin_thr
 
     DCOSeeds = fdata['doubleCompactObjects']['seed'][...].squeeze()
 
-     
 
     for ind_GW, GWname in enumerate(GWnameList):  
         print(GWname)
@@ -1503,8 +1502,8 @@ runMRR_nonMRR_ratio = True
 
 
 if runMRR_nonMRR_ratio==True:
-    for BPS in [ 'C',  'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T' ]:
-    # for BPS in ['C']:
+    # for BPS in ['A','B',  'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T' ]:
+    for BPS in ['B']:
     # for BPS in ['N', 'O', 'P', 'Q', 'R', 'S', 'T' ]:
         print(BPS)
         for DCOtype in ['BBH']:

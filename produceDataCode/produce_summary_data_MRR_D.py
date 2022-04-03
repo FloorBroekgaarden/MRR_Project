@@ -1282,7 +1282,6 @@ def writeToRatesFile_MRR_nonMRR_ratio(BPSmodelName='Z', DCOtype='BHNS', spin_thr
 
     DCOSeeds = fdata['doubleCompactObjects']['seed'][...].squeeze()
 
-     
 
     for ind_GW, GWname in enumerate(GWnameList):  
         print(GWname)
@@ -1422,9 +1421,7 @@ GWTC3 = ['GW191103_012549', 'GW191105_143521', 'GW191109_010717', 'GW191113_0717
     
 
 
-BBHlist_GWTC_123 = ['GW150914', 'GW151012', 'GW151226', 'GW170104', 'GW170608', 'GW170729', 'GW170809', \
-                    'GW170814', 'GW170818', 'GW170823', 'GW190408_181802', 'GW190412', 'GW190413_052954',\
-                    'GW190413_134308', 'GW190421_213856', 'GW190424_180648', 'GW190503_185404', 'GW190512_180714', \
+BBHlist_GWTC_123 = ['GW190421_213856', 'GW190424_180648', 'GW190503_185404', 'GW190512_180714', \
                     'GW190513_205428', 'GW190514_065416', 'GW190517_055101', 'GW190519_153544', 'GW190521', \
                     'GW190521_074359', 'GW190527_092055', 'GW190602_175927', 'GW190620_030421', 'GW190630_185205', \
                     'GW190701_203306', 'GW190706_222641', 'GW190707_093326', 'GW190708_232457', 'GW190719_215514',\
@@ -1503,8 +1500,8 @@ runMRR_nonMRR_ratio = True
 
 
 if runMRR_nonMRR_ratio==True:
-    for BPS in [ 'C',  'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T' ]:
-    # for BPS in ['C']:
+    # for BPS in ['A','B',  'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T' ]:
+    for BPS in ['D']:
     # for BPS in ['N', 'O', 'P', 'Q', 'R', 'S', 'T' ]:
         print(BPS)
         for DCOtype in ['BBH']:
