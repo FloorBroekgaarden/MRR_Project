@@ -1399,6 +1399,281 @@ def writeToRatesFile_MRR_nonMRR_ratio(BPSmodelName='Z', DCOtype='BHNS', spin_thr
 
 
 
+def createEmptyCSVplaceholderMetallicity(DCOtype='BBH'):
+
+
+   
+
+
+    DCOname=dictDCOtypeDCOlabel[DCOtype]
+  
+    channel_names = ['total', 'MRR',  'nonMRR', 'MRR_spin', 'nonMRR_spin']
+
+
+
+    NAMES = []
+    # stringgg = 'GW190814rate'
+
+    for ind_m, m_ in enumerate(BPSnameslist):
+        for ind_c, c_ in enumerate(channel_names):
+            str_ = m_ + ' ' + c_ + '  [Msun^{-1}]'
+
+            NAMES.append(str_)
+
+            
+            
+
+
+    datas=[]
+    nMetallicities = 53
+    Zlist=['0_0001','0_00011', '0_00012', '0_00014', '0_00016', '0_00017',\
+    '0_00019', '0_00022', '0_00024', '0_00027', '0_0003', '0_00034',\
+    '0_00037', '0_00042', '0_00047', '0_00052', '0_00058', '0_00065',\
+    '0_00073', '0_00081', '0_0009', '0_00101', '0_00113', '0_00126',\
+    '0_0014', '0_00157', '0_00175', '0_00195', '0_00218', '0_00243',\
+    '0_00272', '0_00303', '0_00339', '0_00378', '0_00422', '0_00471',\
+    '0_00526', '0_00587', '0_00655', '0_00732', '0_00817', '0_00912',\
+    '0_01018', '0_01137', '0_01269', '0_01416', '0_01581', '0_01765', '0_01971', '0_022', '0_0244', '0_02705', '0_03']
+
+    for i in range(len(NAMES)):
+        datas.append(np.zeros(nMetallicities))
+        # datas.append(np.zeros(nMetallicities))
+        
+    
+    df = pd.DataFrame(data=datas, index=NAMES, columns=Zlist).T
+    df.columns =   df.columns.map(str)
+    df.index.names = ['Z_i']
+    df.columns.names = ['model']
+
+    df.to_csv('/Users/floorbroekgaarden/Projects/GitHub/MRR_Project/MRRformationRatesperMetallicity_'+DCOname+ '_' +  '.csv')
+
+    return 
+
+
+
+
+
+
+def writeFormationRatesAndChannelsToFile_MRR_PerMetallicity(DCOtype='BBH', pathCOMPASOutput='/Volumes/Andromeda2/DATA/AllDCO_bugfix/',spin_threshold=0.05):
+    
+    
+    # BPSnameslist = list(string.ascii_uppercase)[0:nBPSmodels]   
+    channel_names = ['total', 'MRR',  'nonMRR', 'MRR_spin', 'nonMRR_spin']
+    # temp = range(nModels+3)
+    DCOname=dictDCOtypeDCOlabel[DCOtype]
+    
+ 
+
+    print('now at DCO type  ', DCOtype)
+    for ind_m, bps_model in enumerate(BPSnameslist[:]):      
+        print()
+        print('now at bps label', bps_model)
+        print('now at model ', alphabetDirDict[bps_model])
+            
+        # set always optimistic CE false, unless we are doing the optimistic variation
+        OPTIMISTIC=False
+        if (bps_model=='F') or (bps_model=='K'):
+            OPTIMISTIC=True
+            print('doing optimistic version of %s'%alphabetDirDict[bps_model])
+            
+        # path to datafile 
+        # path = pathCOMPASOutput+alphabetDirDict[bps_model] + '/' + 'COMPASCompactOutput_'+DCOtype +'_'+bps_model+'.h5'
+        path = pathCOMPASOutput+alphabetDirDict[bps_model] + '/' + 'COMPASOutput.h5'
+            
+        #But I want only within Hubble time 
+        Data            = CC.COMPASData(path=path, lazyData=True, Mlower=5., \
+                         Mupper=150, binaryFraction=1)
+        Data.setCOMPASDCOmask(types=DCOtype,  withinHubbleTime=True, optimistic=OPTIMISTIC)
+        Data.setCOMPASData()
+        
+        metallicities = Data.metallicitySystems
+        seeds    = Data.seeds[Data.Hubble==True]
+        weights = Data.weight
+
+        Data_totalMassEvolvedPerZ = Data.totalMassEvolvedPerZ
+        Data_metallicityGrid = Data.metallicityGrid
+        del Data 
+
+        BPSmodelName = bps_model
+        # path for files 
+        path_dir = '/Volumes/Andromeda2/DATA/AllDCO_bugfix/'
+        path_ = path_dir
+        path_ = path_ + alphabetDirDict[BPSmodelName] +'/'
+        path  = path_ + 'COMPASCompactOutput_'+ DCOtype +'_' + BPSmodelName + '.h5'
+                
+        # read in data 
+        fdata = h5.File(path, 'r')
+        fDCO      = fdata['doubleCompactObjects'] # hdf5 file with the DCO information
+        fSN       = fdata['supernovae']  # hdf5 file with the SN information
+        #
+        M1 = fDCO['M1'][...].squeeze()   # Compact object mass [Msun] of the initially more massive star
+        M2 = fDCO['M2'][...].squeeze()  # Compact object mass [Msun] of the initially less massive star
+
+        print('using indices')
+        seedsDCO = fDCO['seed'][...].squeeze()  # get the seeds in the DCO file 
+        seedsSN = fSN['randomSeed'][...].squeeze()    # get the seeds in the SN file 
+        indices = np.sort(np.unique(seedsSN[1::2], return_index=True)[1])
+        maskSNdco = np.in1d(seedsSN,  seedsDCO) # mask in the SNe files the SNe that correspond to our DCO
+        whichSN = fSN['whichStar'][...].squeeze()[maskSNdco]  # this is 1 if the initially primary star goes SN and 2 if the secondary goes supernova     
+        whichSN2 = whichSN[1::2][indices]
+
+        # either SN2 = primary (1) and M1 is > M2, or SN2 = secondary & M1 < M2 
+        # this takes into account (first term) rejuvenation 
+        MRR_mask = ((whichSN2==1) & (M1>M2) ) | ((whichSN2==2) & (M1<M2)) 
+
+        # M1LVK, M2LVK = obtainM1BHandM2BHassymetric(M1, M2)
+        # chirp_mass = chirpmass(M1LVK, M2LVK)
+        # mass_ratio_LVK =  M2LVK/M1LVK
+
+        del M1
+        del M2
+        del whichSN2
+        del whichSN
+        del maskSNdco
+        del indices
+        del seedsSN
+        # del seedsDCO
+        del fDCO
+        del fSN
+
+        fdata.close()
+
+
+        spin = COspin(data_path=path, state='he_depletion')  # set class 
+        spin.setCOMPASData() # reads in the COMPAS DCO parameters 
+        spinMZAMS1, spinMZAMS2  = spin.BaveraSpin()
+
+
+        spinLVKM1, spinLVKM2 = np.zeros_like(spinMZAMS1), np.zeros_like(spinMZAMS1)
+        spinLVKM1[MRR_mask] = spinMZAMS2[MRR_mask]  # MRR so M1 comes from M2ZAMS, we assign it spin from M2ZAMS
+        spinLVKM1[~MRR_mask] = spinMZAMS1[~MRR_mask]  # no MRR so M1 comes from M1ZAMS, we assign it spin from M1ZAMS
+        spinLVKM2[MRR_mask] = spinMZAMS1[MRR_mask]   # MRR so M2 comes from M1ZAMS, we assign it spin from M1ZAMS
+        spinLVKM2[~MRR_mask] = spinMZAMS2[~MRR_mask]   # no MRR so M2 comes from M2ZAMS, we assign it spin from M2ZAMS     
+
+        # chi_eff = ((spinLVKM1*M1LVK) + (spinLVKM2*M2LVK)) / (M1LVK + M2LVK)
+
+
+
+        mask_spin2zero_MRR = (spinLVKM1>spin_threshold) & (MRR_mask==1)
+        mask_spin1zero_nonMRR = (spinLVKM2>spin_threshold) & (MRR_mask==0)
+        # dictChannelsBHNS = { 'classic':seedsClassic, \
+        #                     'immediate CE':seedsSingleCE,\
+        #                          'stable B no CEE':seedsOnlyStableMT, \
+        #                      r'double-core CE':seedsDoubleCE,  \
+        #                         'other':seedsOther\
+        #                        }
+
+
+        listt=[0.0001, 0.00011, 0.00012, 0.00014, 0.00016, 0.00017,\
+               0.00019, 0.00022, 0.00024, 0.00027, 0.0003, 0.00034, \
+               0.00037, 0.00042, 0.00047, 0.00052, 0.00058, 0.00065,\
+               0.00073, 0.00081, 0.0009, 0.00101, 0.00113, 0.00126,\
+               0.0014, 0.00157, 0.00175, 0.00195, 0.00218, 0.00243, \
+               0.00272, 0.00303, 0.00339, 0.00378, 0.00422, 0.00471, \
+               0.00526, 0.00587, 0.00655, 0.00732, 0.00817, 0.00912, \
+               0.01018, 0.01137, 0.01269, 0.01416, 0.01581, 0.01765, 0.01971, 0.022, 0.0244, 0.02705, 0.03]
+
+                 
+        formationRateTotal           = np.zeros(len(listt))  
+        formationRateMRR             = np.zeros(len(listt)) 
+        formationRatenonMRR          = np.zeros(len(listt)) 
+        formationRateMRR_spin        = np.zeros(len(listt)) 
+        formationRatenonMRR_spin       = np.zeros(len(listt)) 
+        # formationRateOther           = np.zeros(len(listt)) 
+
+        # print('#Z =',len(Data.metallicityGrid))
+        for nrZ, Z in enumerate(listt):
+            # this if and else statement is a little hack. Data.metallicityGrid might not contains some metallicities since
+            # it is based on the systems in the hdf5 file, but since the big Data files only contain the DCOs, it can be that a certain metallciity point
+            # has 0 DCOs and thats what the data.metallicityGrid is based on            
+            if Z in Data_metallicityGrid:
+                maskZ = (metallicities == Z)
+                formationRateTotal[nrZ] = np.sum(weights[maskZ]) # //floor weights
+                # print('total 1 =',formationRateTotal[nrZ])
+                # mask different channels
+                InMRR       = np.in1d(seeds, seedsDCO[MRR_mask])
+                InnonMRR  = np.in1d(seeds, seedsDCO[~MRR_mask])
+                InMRR_spin       = np.in1d(seeds, seedsDCO[mask_spin2zero_MRR])
+                InnonMRR_spin       = np.in1d(seeds, seedsDCO[mask_spin1zero_nonMRR])
+                # InOther         = np.in1d(seeds, seedsOther)
+                
+
+
+                maskMRR         = (metallicities == Z) & (InMRR==1)
+                masknonMRR    = (metallicities == Z) & (InnonMRR==1)
+                maskMRR_spin        = (metallicities == Z) & (InMRR_spin==1)
+                masknonMRR_spin       = (metallicities == Z) & (InnonMRR_spin==1)
+                # maskOther           = (metallicities == Z) & (InOther==1)
+                # del InClassic
+                # del InOnlyStableMT
+                # del InSingleCE
+                # del InDoubleCE
+                # del InOther
+
+
+                # print('4')
+                formationRateMRR[nrZ]         = np.sum(weights[maskMRR])
+                formationRatenonMRR[nrZ]    = np.sum(weights[masknonMRR])
+                formationRateMRR_spin[nrZ]        = np.sum(weights[maskMRR_spin]) 
+                formationRatenonMRR_spin[nrZ]        = np.sum(weights[masknonMRR_spin])
+                # formationRateOther[nrZ]           = np.sum(weights[maskOther])
+            else:
+                formationRateTotal[nrZ]           = 0
+                formationRateMRR[nrZ]         = 0
+                formationRatenonMRR[nrZ]    = 0
+                formationRateMRR_spin[nrZ]        = 0
+                formationRatenonMRR_spin[nrZ]        = 0
+                # formationRateOther[nrZ]           = 0           
+
+        # del seedsMRR
+        # del seedsnonMR
+        # del seedsSingleCE
+        # del seedsDoubleCE
+        # del seedsOther
+        # del seeds           
+        # mask the Z that are in the grid           
+        maskZgridinZlist = np.in1d(listt, Data_metallicityGrid)
+
+        formationRateTotal[maskZgridinZlist] = np.divide(formationRateTotal[maskZgridinZlist], Data_totalMassEvolvedPerZ) + 0 #lowerY        
+        formationRateMRR[maskZgridinZlist] = np.divide(formationRateMRR[maskZgridinZlist], Data_totalMassEvolvedPerZ)
+        formationRatenonMRR[maskZgridinZlist] = np.divide(formationRatenonMRR[maskZgridinZlist], Data_totalMassEvolvedPerZ)
+        formationRateMRR_spin[maskZgridinZlist] = np.divide(formationRateMRR_spin[maskZgridinZlist], Data_totalMassEvolvedPerZ)
+        formationRatenonMRR_spin[maskZgridinZlist] = np.divide(formationRatenonMRR_spin[maskZgridinZlist], Data_totalMassEvolvedPerZ)
+        # formationRateOther[maskZgridinZlist] = np.divide(formationRateOther[maskZgridinZlist], Data_totalMassEvolvedPerZ)
+
+        df = pd.read_csv('/Users/floorbroekgaarden/Projects/GitHub/MRR_Project/MRRformationRatesperMetallicity_' +DCOname+ '_' +  '.csv', index_col=0)
+        # namez0 = bps_model +' total  [Msun^{-1}]'
+        for ind_c, c_ in enumerate(channel_names):
+            str_ = bps_model + ' ' + c_ + '  [Msun^{-1}]'
+
+            # total rates 
+            if c_=='total':             
+                df[str_] = formationRateTotal 
+            elif c_=='MRR':
+                df[str_] = formationRateMRR
+            elif c_=='nonMRR':
+                df[str_] = formationRatenonMRR
+            elif c_=='MRR_spin':
+                df[str_] = formationRateMRR_spin
+            elif c_=='nonMRR_spin':
+                df[str_] = formationRatenonMRR_spin
+            # elif c_=='V_other':
+            #     df[str_] = formationRateOther
+
+        df.to_csv('/Users/floorbroekgaarden/Projects/GitHub/MRR_Project/MRRformationRatesperMetallicity_'+DCOname+ '_' +  '.csv')
+
+
+    print('finished')
+
+    return
+
+
+
+
+
+
+
+
 
 
 
@@ -1456,6 +1731,15 @@ INITIALIZE_MRR_Spins = False
 INITIALIZE_runMRR_nonMRR_ratio = False
 # 
 spin_threshold=0.05
+INITIALIZE_perMetallicity = False
+
+
+
+if INITIALIZE_perMetallicity==True:
+
+    createEmptyCSVplaceholderMetallicity(DCOtype='BBH')
+
+
 
 
 if INITIALIZE_GENERAL==True:
@@ -1498,8 +1782,14 @@ runGeneralNSNS = False
 runLightestFormsFirst=False
 runMRR_FormationChannels = False
 runMRR_Spins = False
-runMRR_nonMRR_ratio = True
+runMRR_nonMRR_ratio = False
+runMRR_perMetallicity = True 
 
+
+
+
+if runMRR_perMetallicity==True:
+    writeFormationRatesAndChannelsToFile_MRR_PerMetallicity(DCOtype='BBH', pathCOMPASOutput='/Volumes/Andromeda2/DATA/AllDCO_bugfix/', spin_threshold=spin_threshold)
 
 
 if runMRR_nonMRR_ratio==True:
