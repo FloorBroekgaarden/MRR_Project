@@ -308,13 +308,40 @@ def reduceH5file(pathToData, pathToDataWithoutCOMPASname, DCOtype, optimistic, B
           
 
 
+    for SFRDS in  ['123', '312', '231']:
+        for xx in [1]:
+            for yy in [22]:
 
-    for ind_GSMF, GSMF in enumerate(GSMFs):
-        ind_y = ind_GSMF + 1
-        for ind_MZ, MZ in enumerate(MZs):
-            ind_z = ind_MZ +1
-            for ind_SFR, SFR in enumerate(SFRs):
-                ind_x = ind_SFR+1
+                if SFRDS=='123':
+                    ind_x = 1
+                    ind_y = 2
+                    ind_z = 3
+                    GSMF = GSMFs[int(ind_y-1)]
+                    MZ = MZs[int(ind_z-1)]
+                    SFR = SFRs[int(ind_x-1)]
+                elif SFRDS=='312':
+                    ind_x = 3
+                    ind_y = 1
+                    ind_z = 2   
+                    GSMF = GSMFs[int(ind_y-1)]
+                    MZ = MZs[int(ind_z-1)]
+                    SFR = SFRs[int(ind_x-1)]               
+
+                elif SFRDS=='231':
+                    ind_x = 2
+                    ind_y = 3
+                    ind_z = 1
+
+                    GSMF = GSMFs[int(ind_y-1)]
+                    MZ = MZs[int(ind_z-1)]
+                    SFR = SFRs[int(ind_x-1)]
+
+    # for ind_GSMF, GSMF in enumerate(GSMFs):
+    #     ind_y = ind_GSMF + 1
+    #     for ind_MZ, MZ in enumerate(MZs):
+    #         ind_z = ind_MZ +1
+    #         for ind_SFR, SFR in enumerate(SFRs):
+    #             ind_x = ind_SFR+1
                 
                 mssfrName = '%s%s%s'%(ind_x, ind_y, ind_z)   
                 print('now at mssfr xyz=', mssfrName)
@@ -401,26 +428,26 @@ def reduceH5file(pathToData, pathToDataWithoutCOMPASname, DCOtype, optimistic, B
 
 
 
-for DCOtype in ['BBH']:
+# for DCOtype in ['BBH']:
 
-    pathToData = '/Volumes/Andromeda2/DATA/AllDCO_bugfix//massTransferEfficiencyFixed_0_25/COMPASOutput.h5'
-    pathToDataWithoutCOMPASname = '/Volumes/Andromeda2/DATA/AllDCO_bugfix//massTransferEfficiencyFixed_0_25/'
-    optimistic=int(0)
-    BPSmodelName = 'B'
-    print()
-    print('-------------------------------------------------------')
-    print(' now at ', DCOtype, 'running for modelname', BPSmodelName)
-    print('which is in this directory', pathToDataWithoutCOMPASname)
-    print('optimistic = ', optimistic)
+#     pathToData = '/Volumes/Andromeda2/DATA/AllDCO_bugfix//massTransferEfficiencyFixed_0_25/COMPASOutput.h5'
+#     pathToDataWithoutCOMPASname = '/Volumes/Andromeda2/DATA/AllDCO_bugfix//massTransferEfficiencyFixed_0_25/'
+#     optimistic=int(0)
+#     BPSmodelName = 'B'
+#     print()
+#     print('-------------------------------------------------------')
+#     print(' now at ', DCOtype, 'running for modelname', BPSmodelName)
+#     print('which is in this directory', pathToDataWithoutCOMPASname)
+#     print('optimistic = ', optimistic)
 
-    reduceH5file(pathToData=pathToData, pathToDataWithoutCOMPASname=pathToDataWithoutCOMPASname, DCOtype=DCOtype, optimistic=optimistic, BPSmodelName=BPSmodelName)
-
-
+#     reduceH5file(pathToData=pathToData, pathToDataWithoutCOMPASname=pathToDataWithoutCOMPASname, DCOtype=DCOtype, optimistic=optimistic, BPSmodelName=BPSmodelName)
 
 
-# for DCOtype in ['BNS']:
-#     pathToData = '/Volumes/Andromeda/DATA/AllDCO_bugfix/massTransferEfficiencyFixed_0_5/COMPASOutput.h5'
-#     pathToDataWithoutCOMPASname = '/Volumes/Andromeda/DATA/AllDCO_bugfix/massTransferEfficiencyFixed_0_5/'
+
+
+# for DCOtype in ['BBH']:
+#     pathToData = '/Volumes/Andromeda2/DATA/AllDCO_bugfix/massTransferEfficiencyFixed_0_5/COMPASOutput.h5'
+#     pathToDataWithoutCOMPASname = '/Volumes/Andromeda2/DATA/AllDCO_bugfix/massTransferEfficiencyFixed_0_5/'
 #     optimistic=int(0)
 #     BPSmodelName = 'C'
 #     print()
@@ -433,8 +460,8 @@ for DCOtype in ['BBH']:
 
 
 # for DCOtype in ['BBH']:
-#     pathToData = '/Volumes/Andromeda/DATA/AllDCO_bugfix/massTransferEfficiencyFixed_0_75/COMPASOutput.h5'
-#     pathToDataWithoutCOMPASname = '/Volumes/Andromeda/DATA/AllDCO_bugfix/massTransferEfficiencyFixed_0_75/'
+#     pathToData = '/Volumes/Andromeda2/DATA/AllDCO_bugfix/massTransferEfficiencyFixed_0_75/COMPASOutput.h5'
+#     pathToDataWithoutCOMPASname = '/Volumes/Andromeda2/DATA/AllDCO_bugfix/massTransferEfficiencyFixed_0_75/'
 #     optimistic=int(0)
 #     BPSmodelName = 'D'
 #     print()
@@ -447,26 +474,42 @@ for DCOtype in ['BBH']:
 
 
 
+for DCOtype in ['BBH']:
+
+    pathToData = '/Volumes/Andromeda2/DATA/AllDCO_bugfix/unstableCaseBB/COMPASOutput.h5'
+    pathToDataWithoutCOMPASname = '/Volumes/Andromeda2/DATA/AllDCO_bugfix/unstableCaseBB/'
+    optimistic=int(0)
+    BPSmodelName = 'E'
+    print()
+    print('-------------------------------------------------------')
+    print(' now at ', DCOtype, 'running for modelname', BPSmodelName)
+    print('which is in this directory', pathToDataWithoutCOMPASname)
+    print('optimistic = ', optimistic)
+
+    reduceH5file(pathToData=pathToData, pathToDataWithoutCOMPASname=pathToDataWithoutCOMPASname, DCOtype=DCOtype, optimistic=optimistic, BPSmodelName=BPSmodelName)
+
+
+for DCOtype in ['BBH']:
+
+    pathToData = '/Volumes/Andromeda2/DATA/AllDCO_bugfix/unstableCaseBB/COMPASOutput.h5'
+    pathToDataWithoutCOMPASname = '/Volumes/Andromeda2/DATA/AllDCO_bugfix/unstableCaseBB/'
+    optimistic=int(1)
+    BPSmodelName = 'F'
+    print()
+    print('-------------------------------------------------------')
+    print(' now at ', DCOtype, 'running for modelname', BPSmodelName)
+    print('which is in this directory', pathToDataWithoutCOMPASname)
+    print('optimistic = ', optimistic)
+
+    reduceH5file(pathToData=pathToData, pathToDataWithoutCOMPASname=pathToDataWithoutCOMPASname, DCOtype=DCOtype, optimistic=optimistic, BPSmodelName=BPSmodelName)
+
+
+
 # for DCOtype in ['BBH']:
 
-#     pathToData = '/Volumes/Andromeda/DATA/AllDCO_bugfix/unstableCaseBB/COMPASOutput.h5'
-#     pathToDataWithoutCOMPASname = '/Volumes/Andromeda/DATA/AllDCO_bugfix/unstableCaseBB/'
+#     pathToData = '/Volumes/Andromeda2/DATA/AllDCO_bugfix/alpha0_5/COMPASOutput.h5'
+#     pathToDataWithoutCOMPASname = '/Volumes/Andromeda2/DATA/AllDCO_bugfix/alpha0_5/'
 #     optimistic=int(0)
-#     BPSmodelName = 'E'
-#     print()
-#     print('-------------------------------------------------------')
-#     print(' now at ', DCOtype, 'running for modelname', BPSmodelName)
-#     print('which is in this directory', pathToDataWithoutCOMPASname)
-#     print('optimistic = ', optimistic)
-
-#     reduceH5file(pathToData=pathToData, pathToDataWithoutCOMPASname=pathToDataWithoutCOMPASname, DCOtype=DCOtype, optimistic=optimistic, BPSmodelName=BPSmodelName)
-
-
-# for DCOtype in ['BBH']:
-
-#     pathToData = '/Volumes/Andromeda2/DATA/AllDCO_bugfix/unstableCaseBB/COMPASOutput.h5'
-#     pathToDataWithoutCOMPASname = '/Volumes/Andromeda2/DATA/AllDCO_bugfix/unstableCaseBB/'
-#     optimistic=int(1)
 #     BPSmodelName = 'F'
 #     print()
 #     print('-------------------------------------------------------')
@@ -478,44 +521,79 @@ for DCOtype in ['BBH']:
 
 
 
+
+
+for DCOtype in ['BBH']:
+
+    pathToData = '/Volumes/Andromeda2/DATA/AllDCO_bugfix/alpha0_1/COMPASOutput.h5'
+    pathToDataWithoutCOMPASname = '/Volumes/Andromeda2/DATA/AllDCO_bugfix/alpha0_1/'
+    optimistic=int(0)
+    BPSmodelName = 'G'
+    print()
+    print('-------------------------------------------------------')
+    print(' now at ', DCOtype, 'running for modelname', BPSmodelName)
+    print('which is in this directory', pathToDataWithoutCOMPASname)
+    print('optimistic = ', optimistic)
+
+    reduceH5file(pathToData=pathToData, pathToDataWithoutCOMPASname=pathToDataWithoutCOMPASname, DCOtype=DCOtype, optimistic=optimistic, BPSmodelName=BPSmodelName)
+
+
+
+
+for DCOtype in ['BBH']:
+
+    pathToData = '/Volumes/Andromeda2/DATA/AllDCO_bugfix/alpha0_5/COMPASOutput.h5'
+    pathToDataWithoutCOMPASname = '/Volumes/Andromeda2/DATA/AllDCO_bugfix/alpha0_5/'
+    optimistic=int(0)
+    BPSmodelName = 'H'
+    print()
+    print('-------------------------------------------------------')
+    print(' now at ', DCOtype, 'running for modelname', BPSmodelName)
+    print('which is in this directory', pathToDataWithoutCOMPASname)
+    print('optimistic = ', optimistic)
+
+    reduceH5file(pathToData=pathToData, pathToDataWithoutCOMPASname=pathToDataWithoutCOMPASname, DCOtype=DCOtype, optimistic=optimistic, BPSmodelName=BPSmodelName)
+
+
+
+for DCOtype in ['BBH']:
+
+    pathToData = '/Volumes/Andromeda2/DATA/AllDCO_bugfix/alpha2_0/COMPASOutput.h5'
+    pathToDataWithoutCOMPASname = '/Volumes/Andromeda2/DATA/AllDCO_bugfix/alpha2_0/'
+    optimistic=int(0)
+    BPSmodelName = 'I'
+    print()
+    print('-------------------------------------------------------')
+    print(' now at ', DCOtype, 'running for modelname', BPSmodelName)
+    print('which is in this directory', pathToDataWithoutCOMPASname)
+    print('optimistic = ', optimistic)
+
+    reduceH5file(pathToData=pathToData, pathToDataWithoutCOMPASname=pathToDataWithoutCOMPASname, DCOtype=DCOtype, optimistic=optimistic, BPSmodelName=BPSmodelName)
+
+
+
+
+for DCOtype in ['BBH']: #, 'BBH']:
+
+    pathToData = '/Volumes/Andromeda2/DATA/AllDCO_bugfix/alpha10/COMPASOutput.h5'
+    pathToDataWithoutCOMPASname = '/Volumes/Andromeda2/DATA/AllDCO_bugfix/alpha10/'
+    optimistic=int(0)
+    BPSmodelName = 'J'
+    print()
+    print('-------------------------------------------------------')
+    print(' now at ', DCOtype, 'running for modelname', BPSmodelName)
+    print('which is in this directory', pathToDataWithoutCOMPASname)
+    print('optimistic = ', optimistic)
+
+    reduceH5file(pathToData=pathToData, pathToDataWithoutCOMPASname=pathToDataWithoutCOMPASname, DCOtype=DCOtype, optimistic=optimistic, BPSmodelName=BPSmodelName)
+
+
+
+
 # for DCOtype in ['BBH']:
 
-#     pathToData = '/Volumes/Andromeda/DATA/AllDCO_bugfix/alpha0_5/COMPASOutput.h5'
-#     pathToDataWithoutCOMPASname = '/Volumes/Andromeda/DATA/AllDCO_bugfix/alpha0_5/'
-#     optimistic=int(0)
-#     BPSmodelName = 'F'
-#     print()
-#     print('-------------------------------------------------------')
-#     print(' now at ', DCOtype, 'running for modelname', BPSmodelName)
-#     print('which is in this directory', pathToDataWithoutCOMPASname)
-#     print('optimistic = ', optimistic)
-
-#     reduceH5file(pathToData=pathToData, pathToDataWithoutCOMPASname=pathToDataWithoutCOMPASname, DCOtype=DCOtype, optimistic=optimistic, BPSmodelName=BPSmodelName)
-
-
-
-
-
-# for DCOtype in ['BBH']:
-
-#     pathToData = '/Volumes/Andromeda/DATA/AllDCO_bugfix/alpha0_1/COMPASOutput.h5'
-#     pathToDataWithoutCOMPASname = '/Volumes/Andromeda/DATA/AllDCO_bugfix/alpha0_1/'
-#     optimistic=int(0)
-#     BPSmodelName = 'G'
-#     print()
-#     print('-------------------------------------------------------')
-#     print(' now at ', DCOtype, 'running for modelname', BPSmodelName)
-#     print('which is in this directory', pathToDataWithoutCOMPASname)
-#     print('optimistic = ', optimistic)
-
-#     reduceH5file(pathToData=pathToData, pathToDataWithoutCOMPASname=pathToDataWithoutCOMPASname, DCOtype=DCOtype, optimistic=optimistic, BPSmodelName=BPSmodelName)
-
-
-
-# for DCOtype in ['BBH']: #, 'BBH']:
-
-#     pathToData = '/Volumes/Andromeda/DATA/AllDCO_bugfix/alpha10/COMPASOutput.h5'
-#     pathToDataWithoutCOMPASname = '/Volumes/Andromeda/DATA/AllDCO_bugfix/alpha10/'
+#     pathToData = '/Volumes/Andromeda2/DATA/AllDCO_bugfix/maxNSmass2_0/COMPASOutput.h5'
+#     pathToDataWithoutCOMPASname = '/Volumes/Andromeda2/DATA/AllDCO_bugfix/maxNSmass2_0/'
 #     optimistic=int(0)
 #     BPSmodelName = 'J'
 #     print()
@@ -530,71 +608,8 @@ for DCOtype in ['BBH']:
 
 # for DCOtype in ['BBH']:
 
-#     pathToData = '/Volumes/Andromeda/DATA/AllDCO_bugfix/alpha2_0/COMPASOutput.h5'
-#     pathToDataWithoutCOMPASname = '/Volumes/Andromeda/DATA/AllDCO_bugfix/alpha2_0/'
-#     optimistic=int(0)
-#     BPSmodelName = 'G'
-#     print()
-#     print('-------------------------------------------------------')
-#     print(' now at ', DCOtype, 'running for modelname', BPSmodelName)
-#     print('which is in this directory', pathToDataWithoutCOMPASname)
-#     print('optimistic = ', optimistic)
-
-#     reduceH5file(pathToData=pathToData, pathToDataWithoutCOMPASname=pathToDataWithoutCOMPASname, DCOtype=DCOtype, optimistic=optimistic, BPSmodelName=BPSmodelName)
-
-
-
-# for DCOtype in ['BBH']:
-
-#     pathToData = '/Volumes/Andromeda/DATA/AllDCO_bugfix/fiducial/COMPASOutput.h5'
-#     pathToDataWithoutCOMPASname = '/Volumes/Andromeda/DATA/AllDCO_bugfix/fiducial/'
-#     optimistic=int(1)
-#     BPSmodelName = 'H'
-#     print()
-#     print('-------------------------------------------------------')
-#     print(' now at ', DCOtype, 'running for modelname', BPSmodelName)
-#     print('which is in this directory', pathToDataWithoutCOMPASname)
-#     print('optimistic = ', optimistic)
-
-#     reduceH5file(pathToData=pathToData, pathToDataWithoutCOMPASname=pathToDataWithoutCOMPASname, DCOtype=DCOtype, optimistic=optimistic, BPSmodelName=BPSmodelName)
-
-
-# for DCOtype in ['BBH']:
-
-#     pathToData = '/Volumes/Andromeda/DATA/AllDCO_bugfix/rapid/COMPASOutput.h5'
-#     pathToDataWithoutCOMPASname = '/Volumes/Andromeda/DATA/AllDCO_bugfix/rapid/'
-#     optimistic=int(0)
-#     BPSmodelName = 'I'
-#     print()
-#     print('-------------------------------------------------------')
-#     print(' now at ', DCOtype, 'running for modelname', BPSmodelName)
-#     print('which is in this directory', pathToDataWithoutCOMPASname)
-#     print('optimistic = ', optimistic)
-
-#     reduceH5file(pathToData=pathToData, pathToDataWithoutCOMPASname=pathToDataWithoutCOMPASname, DCOtype=DCOtype, optimistic=optimistic, BPSmodelName=BPSmodelName)
-
-
-
-# for DCOtype in ['BBH']:
-
-#     pathToData = '/Volumes/Andromeda/DATA/AllDCO_bugfix/maxNSmass2_0/COMPASOutput.h5'
-#     pathToDataWithoutCOMPASname = '/Volumes/Andromeda/DATA/AllDCO_bugfix/maxNSmass2_0/'
-#     optimistic=int(0)
-#     BPSmodelName = 'J'
-#     print()
-#     print('-------------------------------------------------------')
-#     print(' now at ', DCOtype, 'running for modelname', BPSmodelName)
-#     print('which is in this directory', pathToDataWithoutCOMPASname)
-#     print('optimistic = ', optimistic)
-
-#     reduceH5file(pathToData=pathToData, pathToDataWithoutCOMPASname=pathToDataWithoutCOMPASname, DCOtype=DCOtype, optimistic=optimistic, BPSmodelName=BPSmodelName)
-
-
-
-# for DCOtype in ['BBH']:
-
-#     pathToData = '/Volumes/Andromeda/DATA/AllDCO_bugfix/maxNSmass3_0/COMPASOutput.h5'
-#     pathToDataWithoutCOMPASname = '/Volumes/Andromeda/DATA/AllDCO_bugfix/maxNSmass3_0/'
+#     pathToData = '/Volumes/Andromeda2/DATA/AllDCO_bugfix/maxNSmass3_0/COMPASOutput.h5'
+#     pathToDataWithoutCOMPASname = '/Volumes/Andromeda2/DATA/AllDCO_bugfix/maxNSmass3_0/'
 #     optimistic=int(0)
 #     BPSmodelName = 'K'
 #     print()
@@ -608,8 +623,8 @@ for DCOtype in ['BBH']:
 
 # for DCOtype in ['BBH']:
 
-#     pathToData = '/Volumes/Andromeda/DATA/AllDCO_bugfix/noPISN/COMPASOutput.h5'
-#     pathToDataWithoutCOMPASname = '/Volumes/Andromeda/DATA/AllDCO_bugfix/noPISN/'
+#     pathToData = '/Volumes/Andromeda2/DATA/AllDCO_bugfix/noPISN/COMPASOutput.h5'
+#     pathToDataWithoutCOMPASname = '/Volumes/Andromeda2/DATA/AllDCO_bugfix/noPISN/'
 #     optimistic=int(0)
 #     BPSmodelName = 'L'
 #     print()
@@ -624,8 +639,8 @@ for DCOtype in ['BBH']:
 
 # for DCOtype in ['BBH']:
 
-#     pathToData = '/Volumes/Andromeda/DATA/AllDCO_bugfix/ccSNkick_100km_s/COMPASOutput.h5'
-#     pathToDataWithoutCOMPASname = '/Volumes/Andromeda/DATA/AllDCO_bugfix/ccSNkick_100km_s/'
+#     pathToData = '/Volumes/Andromeda2/DATA/AllDCO_bugfix/ccSNkick_100km_s/COMPASOutput.h5'
+#     pathToDataWithoutCOMPASname = '/Volumes/Andromeda2/DATA/AllDCO_bugfix/ccSNkick_100km_s/'
 #     optimistic=int(0)
 #     BPSmodelName = 'M'
 #     print()
@@ -638,8 +653,8 @@ for DCOtype in ['BBH']:
 
 # for DCOtype in ['BBH']:
 
-#     pathToData = '/Volumes/Andromeda/DATA/AllDCO_bugfix/ccSNkick_30km_s/COMPASOutput.h5'
-#     pathToDataWithoutCOMPASname = '/Volumes/Andromeda/DATA/AllDCO_bugfix/ccSNkick_30km_s/'
+#     pathToData = '/Volumes/Andromeda2/DATA/AllDCO_bugfix/ccSNkick_30km_s/COMPASOutput.h5'
+#     pathToDataWithoutCOMPASname = '/Volumes/Andromeda2/DATA/AllDCO_bugfix/ccSNkick_30km_s/'
 #     optimistic=int(0)
 #     BPSmodelName = 'N'
 #     print()
@@ -652,8 +667,8 @@ for DCOtype in ['BBH']:
 
 # for DCOtype in ['BBH']:
 
-#     pathToData = '/Volumes/Andromeda/DATA/AllDCO_bugfix/noBHkick/COMPASOutput.h5'
-#     pathToDataWithoutCOMPASname = '/Volumes/Andromeda/DATA/AllDCO_bugfix/noBHkick/'
+#     pathToData = '/Volumes/Andromeda2/DATA/AllDCO_bugfix/noBHkick/COMPASOutput.h5'
+#     pathToDataWithoutCOMPASname = '/Volumes/Andromeda2/DATA/AllDCO_bugfix/noBHkick/'
 #     optimistic=int(0)
 #     BPSmodelName = 'O'
 #     print()
@@ -681,7 +696,7 @@ for DCOtype in ['BBH']:
 
 ### EXAMPLE:
 #python reduceHdf5DataMinimal.py '/Volumes/Virgo/DATA/BHNS/alpha_10/COMPASOutput.h5' '/Volumes/Virgo/DATA/BHNS/alpha_10/'  'BNS' 0 'A'
-# python rewriteToCompactFileWithCIweights.py '/Volumes/Andromeda/DATA/AllDCO/fiducial/COMPASOutput.h5' '/Volumes/Andromeda/DATA/AllDCO/fiducial/'  'BNS' 1 'B'
+# python rewriteToCompactFileWithCIweights.py '/Volumes/Andromeda2/DATA/AllDCO/fiducial/COMPASOutput.h5' '/Volumes/Andromeda2/DATA/AllDCO/fiducial/'  'BNS' 1 'B'
 
 
 

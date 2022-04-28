@@ -37,41 +37,64 @@ dictDCOtypeDCOlabel = {'BBH':'BHBH', 'BNS':'NSNS', 'BHNS':'BHNS'}
 
 
 
-def createEmptyCSVplaceholder(DCOtype='BBH', nBPSmodels=15):
+def createEmptyCSVplaceholder(DCOtype='BBH', nBPSmodels=15, BPSname='A'):
 
 
    
 
 
     DCOname=dictDCOtypeDCOlabel[DCOtype]
-    BPSnameslist = list(string.ascii_uppercase)[0:nBPSmodels]   
-    channel_names = ['total', 'I_classic', 'II_only_stable_MT', 'III_single_core_CE', 'IV_double_core_CE', 'V_other']
+     
+    channel_names = ['total intrinsic [Gpc^{-1} yr^{-1}]',\
+     'chi>0.05 intrinsic fraction', 'chi>0.2 intrinsic fraction', 'chi>0.5 intrinsic fraction',\
+                    'total observed [yr^{-1}]',\
+                    'chi>0.05 observed fraction', 'chi>0.2 observed fraction', 'chi>0.5 observed fraction'\
+                    ]
 
 
 
     NAMES = []
     # stringgg = 'GW190814rate'
 
-    for ind_m, m_ in enumerate(BPSnameslist):
+    # for ind_m, m_ in enumerate(BPSnameslist):
+    for ind_mssfr, mssfr in enumerate(MSSFRlist):
         for ind_c, c_ in enumerate(channel_names):
-            str_ = m_ + ' ' + c_ + '  [Msun^{-1}]'
+            str_ = mssfr + ' ' + c_ 
 
             NAMES.append(str_)
 
             
             
+    minz = 0.
+    if DCOtype=='BHNS':
+        maxz = 10
+        resz = 50 # change to 100 //floor 
+    elif DCOtype=='BNS':
+        maxz = 10
+        resz = 50 # change to 100 //floor 
+    elif DCOtype=='BBH': 
+        maxz = 10
+        resz = 50 # change to 100 //floor 
+
+
+
+    temp_z = np.linspace(minz, maxz, resz+1)
+    redshiftshells = (temp_z[0:-1] + temp_z[1:])/2
+    del temp_z  
 
 
     datas=[]
-    nMetallicities = 53
-    Zlist=['0_0001','0_00011', '0_00012', '0_00014', '0_00016', '0_00017',\
-    '0_00019', '0_00022', '0_00024', '0_00027', '0_0003', '0_00034',\
-    '0_00037', '0_00042', '0_00047', '0_00052', '0_00058', '0_00065',\
-    '0_00073', '0_00081', '0_0009', '0_00101', '0_00113', '0_00126',\
-    '0_0014', '0_00157', '0_00175', '0_00195', '0_00218', '0_00243',\
-    '0_00272', '0_00303', '0_00339', '0_00378', '0_00422', '0_00471',\
-    '0_00526', '0_00587', '0_00655', '0_00732', '0_00817', '0_00912',\
-    '0_01018', '0_01137', '0_01269', '0_01416', '0_01581', '0_01765', '0_01971', '0_022', '0_0244', '0_02705', '0_03']
+
+
+    Zlist = []
+    for ind_zz, zz in enumerate(redshiftshells):
+
+        Zlist.append(str(round(zz, 4)))
+
+
+    nMetallicities = len(Zlist)
+
+
 
     for i in range(len(NAMES)):
         datas.append(np.zeros(nMetallicities))
@@ -80,10 +103,10 @@ def createEmptyCSVplaceholder(DCOtype='BBH', nBPSmodels=15):
     
     df = pd.DataFrame(data=datas, index=NAMES, columns=Zlist).T
     df.columns =   df.columns.map(str)
-    df.index.names = ['Z_i']
+    df.index.names = ['redshift']
     df.columns.names = ['model']
 
-    df.to_csv('/Users/floorbroekgaarden/Projects/GitHub/Double-Compact-Object-Mergers/dataFiles/summary_data_Fig_1/formationRatesTotalAndPerChannel_'+DCOname+ '_' +  '.csv')
+    df.to_csv('/Users/floorbroekgaarden/Projects/GitHub/MRR_Project/dataFiles/redshift_rates/RedshiftRatesTotalAndPerSpin_'+DCOname+ '_' + BPSname + '.csv')
 
     return 
 
@@ -283,33 +306,26 @@ import string
 INITIALIZE=True
 
 if INITIALIZE == True:
-    createEmptyCSVplaceholder(DCOtype='BHNS', nBPSmodels=15)
-    createEmptyCSVplaceholder(DCOtype='BNS', nBPSmodels=15)
-    createEmptyCSVplaceholder(DCOtype='BBH', nBPSmodels=15)
+    for BPSname in BPSnameslist:
+        createEmptyCSVplaceholder(DCOtype='BHNS',  BPSname=BPSname)
+
 
 
 print('do not forget to first Initialize if this is the first time you run this script')
 
-nModels=15
-BPSnameslist = list(string.ascii_uppercase)[0:nModels]
-modelDirList = ['fiducial', 'massTransferEfficiencyFixed_0_25', 'massTransferEfficiencyFixed_0_5', 'massTransferEfficiencyFixed_0_75', \
-               'unstableCaseBB', 'alpha0_5', 'alpha2_0', 'fiducial', 'rapid', 'maxNSmass2_0', 'maxNSmass3_0', 'noPISN',  'ccSNkick_100km_s', 'ccSNkick_30km_s', 'noBHkick' ]
+# nModels=15
+# BPSnameslist = list(string.ascii_uppercase)[0:nModels]
+# modelDirList = ['fiducial', 'massTransferEfficiencyFixed_0_25', 'massTransferEfficiencyFixed_0_5', 'massTransferEfficiencyFixed_0_75', \
+#                'unstableCaseBB', 'alpha0_5', 'alpha2_0', 'fiducial', 'rapid', 'maxNSmass2_0', 'maxNSmass3_0', 'noPISN',  'ccSNkick_100km_s', 'ccSNkick_30km_s', 'noBHkick' ]
 
-alphabetDirDict =  {BPSnameslist[i]: modelDirList[i] for i in range(len(BPSnameslist))}
-
-
-writeFormationRatesAndChannelsToFile(DCOtype='BHNS', \
-    pathCOMPASOutput='/Volumes/Andromeda/DATA/AllDCO_bugfix/',\
-     alphabetDirDict=alphabetDirDict, nBPSmodels=nModels)
+# alphabetDirDict =  {BPSnameslist[i]: modelDirList[i] for i in range(len(BPSnameslist))}
 
 
-writeFormationRatesAndChannelsToFile(DCOtype='BNS', \
-    pathCOMPASOutput='/Volumes/Andromeda/DATA/AllDCO_bugfix/',\
-     alphabetDirDict=alphabetDirDict, nBPSmodels=nModels)
 
-writeFormationRatesAndChannelsToFile(DCOtype='BBH', \
-    pathCOMPASOutput='/Volumes/Andromeda/DATA/AllDCO_bugfix/',\
-     alphabetDirDict=alphabetDirDict, nBPSmodels=nModels)
+
+# writeFormationRatesAndChannelsToFile(DCOtype='BBH', \
+#     pathCOMPASOutput='/Volumes/Andromeda/DATA/AllDCO_bugfix/',\
+#      alphabetDirDict=alphabetDirDict, nBPSmodels=nModels)
 
 # plotFormationRatePerZ(pathCOMPASOutput='/Volumes/Andromeda/DATA/AllDCO_bugfix/', alphabetDirDict=alphabetDirDict)    
     
