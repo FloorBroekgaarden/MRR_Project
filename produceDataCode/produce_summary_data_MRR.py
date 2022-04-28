@@ -1309,15 +1309,21 @@ def writeToRatesFile_MRR_nonMRR_ratio(BPSmodelName='Z', DCOtype='BHNS', spin_thr
 
 
         total_mass_CI, mass1_CI, mass2_CI, chirp_mass_CI, mass_ratio_CI, spin1_CI, spin2_CI, chi_eff_CI = GW_credible_intervals(GWname, mode='normal')
-        mask_GW =  (total_mass_CI[0]<=(M1LVK+M2LVK))  & ((M1LVK+M2LVK)<=total_mass_CI[2])  &  (chirp_mass_CI[0]<=chirp_mass) & (chirp_mass<=chirp_mass_CI[2])  & (mass_ratio_CI[0]<= mass_ratio_LVK) & (mass_ratio_LVK<=mass_ratio_CI[2]) & (chi_eff_CI[0]<=chi_eff) & (chi_eff<=chi_eff_CI[2]) & (mass1_CI[0]<= M1LVK) & (M1LVK<=mass1_CI[2]) & (mass2_CI[0]<= M2LVK) & (M2LVK<=mass2_CI[2])
+        # mask_GW =  (total_mass_CI[0]<=(M1LVK+M2LVK))  & ((M1LVK+M2LVK)<=total_mass_CI[2])  &  (chirp_mass_CI[0]<=chirp_mass) & (chirp_mass<=chirp_mass_CI[2])  & (mass_ratio_CI[0]<= mass_ratio_LVK) & (mass_ratio_LVK<=mass_ratio_CI[2]) & (chi_eff_CI[0]<=chi_eff) & (chi_eff<=chi_eff_CI[2]) & (mass1_CI[0]<= M1LVK) & (M1LVK<=mass1_CI[2]) & (mass2_CI[0]<= M2LVK) & (M2LVK<=mass2_CI[2])
+        mask_GW =   (chirp_mass_CI[0]<=chirp_mass) & (chirp_mass<=chirp_mass_CI[2])  & (mass_ratio_CI[0]<= mass_ratio_LVK) & (mass_ratio_LVK<=mass_ratio_CI[2]) & (chi_eff_CI[0]<=chi_eff) 
+
         mask_GW_MRR = (mask_GW==1) & (MRR_mask==1)
         mask_GW_nonMRR = (mask_GW==1) & (MRR_mask==0)
 
 
         total_mass_CI, mass1_CI, mass2_CI, chirp_mass_CI, mass_ratio_CI, spin1_CI, spin2_CI, chi_eff_CI = GW_credible_intervals(GWname, mode='spin1_is_zero')
-        mask_spin1_zero =  (total_mass_CI[0]<=(M1LVK+M2LVK))  & ((M1LVK+M2LVK)<=total_mass_CI[2])  &  (chirp_mass_CI[0]<=chirp_mass) & (chirp_mass<=chirp_mass_CI[2]) & (mass_ratio_CI[0]<= mass_ratio_LVK) & (mass_ratio_LVK<=mass_ratio_CI[2]) & (chi_eff_CI[0]<=chi_eff) & (chi_eff<=chi_eff_CI[2]) & (mass1_CI[0]<= M1LVK) & (M1LVK<=mass1_CI[2]) & (mass2_CI[0]<= M2LVK) & (M2LVK<=mass2_CI[2])# &  (spin2_CI[0]<=spinLVKM2 ) & (spinLVKM2<=spin2_CI[2]) 
+        # mask_spin1_zero =  (total_mass_CI[0]<=(M1LVK+M2LVK))  & ((M1LVK+M2LVK)<=total_mass_CI[2])  &  (chirp_mass_CI[0]<=chirp_mass) & (chirp_mass<=chirp_mass_CI[2]) & (mass_ratio_CI[0]<= mass_ratio_LVK) & (mass_ratio_LVK<=mass_ratio_CI[2]) & (chi_eff_CI[0]<=chi_eff) & (chi_eff<=chi_eff_CI[2]) & (mass1_CI[0]<= M1LVK) & (M1LVK<=mass1_CI[2]) & (mass2_CI[0]<= M2LVK) & (M2LVK<=mass2_CI[2])# &  (spin2_CI[0]<=spinLVKM2 ) & (spinLVKM2<=spin2_CI[2]) 
+        mask_spin1_zero =  (chirp_mass_CI[0]<=chirp_mass) & (chirp_mass<=chirp_mass_CI[2]) & (mass_ratio_CI[0]<= mass_ratio_LVK) & (mass_ratio_LVK<=mass_ratio_CI[2]) & (chi_eff_CI[0]<=chi_eff) # 
+
         total_mass_CI, mass1_CI, mass2_CI, chirp_mass_CI, mass_ratio_CI, spin1_CI, spin2_CI, chi_eff_CI = GW_credible_intervals(GWname, mode='spin2_is_zero')
-        mask_spin2_zero =  (total_mass_CI[0]<=(M1LVK+M2LVK))  & ((M1LVK+M2LVK)<=total_mass_CI[2])  &  (chirp_mass_CI[0]<=chirp_mass) & (chirp_mass<=chirp_mass_CI[2]) & (mass_ratio_CI[0]<= mass_ratio_LVK) & (mass_ratio_LVK<=mass_ratio_CI[2]) & (chi_eff_CI[0]<=chi_eff) & (chi_eff<=chi_eff_CI[2]) & (mass1_CI[0]<= M1LVK) & (M1LVK<=mass1_CI[2]) & (mass2_CI[0]<= M2LVK) & (M2LVK<=mass2_CI[2]) # &  (spin1_CI[0]<=spinLVKM1 ) & (spinLVKM1<=spin1_CI[2]) 
+        
+        mask_spin2_zero =  (chirp_mass_CI[0]<=chirp_mass) & (chirp_mass<=chirp_mass_CI[2]) & (mass_ratio_CI[0]<= mass_ratio_LVK) & (mass_ratio_LVK<=mass_ratio_CI[2]) & (chi_eff_CI[0]<=chi_eff) 
+        # mask_spin2_zero =  (total_mass_CI[0]<=(M1LVK+M2LVK))  & ((M1LVK+M2LVK)<=total_mass_CI[2])  &  (chirp_mass_CI[0]<=chirp_mass) & (chirp_mass<=chirp_mass_CI[2]) & (mass_ratio_CI[0]<= mass_ratio_LVK) & (mass_ratio_LVK<=mass_ratio_CI[2]) & (chi_eff_CI[0]<=chi_eff) & (chi_eff<=chi_eff_CI[2]) & (mass1_CI[0]<= M1LVK) & (M1LVK<=mass1_CI[2]) & (mass2_CI[0]<= M2LVK) & (M2LVK<=mass2_CI[2]) # &  (spin1_CI[0]<=spinLVKM1 ) & (spinLVKM1<=spin1_CI[2]) 
 
 
         mask_spin2zero_MRR = (mask_spin2_zero==1) & (MRR_mask==1)
@@ -1727,10 +1733,10 @@ BBHlist_GWTC_123 = ['GW150914', 'GW151012', 'GW151226', 'GW170104', 'GW170608', 
 INITIALIZE_GENERAL = False # True #False #True #False#True #False
 INITIALIZE_lightestBHfirst = False #True
 INITIALIZE_MRR_FormationChannels = False
-INITIALIZE_MRR_Spins = False
+INITIALIZE_MRR_Spins = True
 INITIALIZE_runMRR_nonMRR_ratio = False
 # 
-spin_threshold=0.05
+spin_threshold=0.01
 INITIALIZE_perMetallicity = False
 
 
@@ -1781,9 +1787,9 @@ runGeneralNSNS = False
 
 runLightestFormsFirst=False
 runMRR_FormationChannels = False
-runMRR_Spins = False
+runMRR_Spins = True
 runMRR_nonMRR_ratio = False
-runMRR_perMetallicity = True 
+runMRR_perMetallicity = False
 
 
 
@@ -1793,9 +1799,10 @@ if runMRR_perMetallicity==True:
 
 
 if runMRR_nonMRR_ratio==True:
-    for BPS in [ 'C',  'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T' ]:
+    for BPS in [  'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T' ]:
     # for BPS in ['C']:
     # for BPS in ['N', 'O', 'P', 'Q', 'R', 'S', 'T' ]:
+        print('inside')
         print(BPS)
         for DCOtype in ['BBH']:
             print('at DCOtype =', DCOtype)
