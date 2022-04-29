@@ -1736,7 +1736,7 @@ INITIALIZE_MRR_FormationChannels = False
 INITIALIZE_MRR_Spins = True
 INITIALIZE_runMRR_nonMRR_ratio = False
 # 
-spin_threshold=0.01
+spin_threshold=0.2
 INITIALIZE_perMetallicity = False
 
 
