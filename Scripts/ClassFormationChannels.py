@@ -74,7 +74,7 @@ class FormationChannels(object):
         
         #Reduce the keys to only the columns we want to 
         #always ignore seed since this is always different
-        columns      = form.keys()
+        columns      = list(form.keys())
         i = columns.index("m_randomSeed")  
         del columns[i]
         #Now delete other columns to ignore
