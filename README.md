@@ -11,7 +11,7 @@ This repository reproduces all results amd plots from the paper. Please email fl
 
 ## Contents 
 
- - Code to Reproduce Figure 1 from the paper: [Figure1_individual_MRR_systems_detailed_evolution/](Individual_System_Evolution_and_MRR_Statistics.ipynb) 
+ - Code to Reproduce Figure 1 from the paper: [Figure1_individual_MRR_systems_detailed_evolution/](Figure1_individual_MRR_systems_detailed_evolution/Individual_System_Evolution_and_MRR_Statistics.ipynb) 
 
 
 
