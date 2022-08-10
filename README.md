@@ -4,6 +4,16 @@ https://ui.adsabs.harvard.edu/abs/2022arXiv220501693B/abstract
 
 
 
+This repository reproduces all results amd plots from the paper. Please email floor broekgaarden (see email on GitHub) for any questions. 
+
+
+
+
+## Contents 
+
+ - Code to Reproduce Figure 1 from the paper: https://github.com/FloorBroekgaarden/MRR_Project/tree/main/Figure1_individual_MRR_systems_detailed_evolution 
+
+
 
 An overview of the simulation realization labels and naming that we copied from Broekgaarden et al. (2021, 2022) can be found below: 
 
