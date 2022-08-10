@@ -1,4 +1,6 @@
-# MRR_Project
+# Github repository for the paper "Signatures of mass ratio reversal in gravitational waves from merging binary black holes" by Floor Broekgaarden, Simon Stevenson and Eric Thrane (ApJ 2022). 
+
+https://ui.adsabs.harvard.edu/abs/2022arXiv220501693B/abstract
 
 
 
