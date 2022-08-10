@@ -11,7 +11,7 @@ This repository reproduces all results amd plots from the paper. Please email fl
 
 ## Contents 
 
- - Code to Reproduce Figure 1 from the paper: https://github.com/FloorBroekgaarden/MRR_Project/tree/main/Figure1_individual_MRR_systems_detailed_evolution 
+ - Code to Reproduce Figure 1 from the paper: [Figure1_individual_MRR_systems_detailed_evolution/](Individual_System_Evolution_and_MRR_Statistics.ipynb) 
 
 
 
