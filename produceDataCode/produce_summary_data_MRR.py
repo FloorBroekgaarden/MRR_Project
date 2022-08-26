@@ -1042,7 +1042,7 @@ def writeToRatesFile_MRR_FormationChannels(BPSmodelName='Z', DCOtype='BHNS'):
                 intrinsicRates[ind_mssfr] = np.sum(w_int)
                 detectedRates[ind_mssfr]  = np.sum(w_det)  
             elif Channel==enumerate_list[-1]: 
-                # TOTAL RATE
+                # TOTAL RATE ALL 
                 intrinsicRates[ind_mssfr] = np.sum(w_int[maskMRR])
                 detectedRates[ind_mssfr]  = np.sum(w_det[maskMRR])  
             else:
